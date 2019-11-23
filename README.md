@@ -55,10 +55,11 @@ https://github.com/keydet89/Tools/tree/master/exe
 
 ImportExcel 6.5.2   
 https://github.com/dfinke/ImportExcel  
+https://www.evild3ad.com/3910/quick-post-installing-importexcel-powershell-module/
 
 ImportRegistryHive.psm1 by Chris Redit   
-https://blog.redit.name/posts/2015/powershell-loading-registry-hive-from-file.html 
-https://www.evild3ad.com/3940/installing-importregistryhive-powershell-module/   
+https://blog.redit.name/posts/2015/powershell-loading-registry-hive-from-file.html  
+https://www.evild3ad.com/3940/installing-importregistryhive-powershell-module/  
 
 ## Links
 [SANS Webcast: Triage Collection and Timeline Generation with KAPE](https://www.youtube.com/watch?v=iYyWZSNBNcw)  
