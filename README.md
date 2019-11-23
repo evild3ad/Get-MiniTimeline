@@ -2,7 +2,7 @@
 Get-MiniTimeline.ps1 is a PowerShell script utilized to collect several forensic artifacts from a mounted forensic image and auto-generate a MiniTimeline.
 
 Forensic Artifacts:  
-  * Master File Table ($MFT)  
+* Master File Table ($MFT)  
   * Windows Event Logs  
   * Windows Registry  
 
@@ -46,7 +46,7 @@ https://blog.redit.name/posts/2015/powershell-loading-registry-hive-from-file.ht
 PS > .\Get-MiniTimeline.ps1 dateRange:MM/DD/YYYY-MM/DD/YYYY  
 ```
 
-![PowerShell](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/PowerShell.png)
+![PowerShell](Screenshots/PowerShell.png)
 
 ![Colorized Excel](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/Colorized-Excel.png)
 
