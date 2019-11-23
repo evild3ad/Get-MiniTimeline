@@ -1,5 +1,5 @@
 # Get-MiniTimeline
-Get-MiniTimeline.ps1 is a PowerShell script utilized to collect several forensic artifacts from a mounted forensic image and to auto-generate a MiniTimeline.
+Get-MiniTimeline.ps1 is a PowerShell script utilized to collect several forensic artifacts from a mounted forensic image and to auto-generate a MiniTimeline (colorized XLSX).
 
 Forensic Artifacts:  
   * Master File Table ($MFT)  
@@ -55,3 +55,4 @@ PS > .\Get-MiniTimeline.ps1 dateRange:MM/DD/YYYY-MM/DD/YYYY
 ## Links
 [https://www.youtube.com/watch?v=iYyWZSNBNcw](https://www.youtube.com/watch?v=iYyWZSNBNcw)  
 [https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape](https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape)  
+<a href="https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape" target="_blank">https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape</a>
