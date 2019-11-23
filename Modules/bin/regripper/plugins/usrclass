@@ -1,0 +1,8 @@
+# 20170415 *ALL* Plugins that apply on USRCLASS hive, alphabetical order
+cmd_shell_u
+inprocserver
+muicache
+muicache_tln
+photos
+shellbags
+shellbags_tln
