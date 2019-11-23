@@ -1,5 +1,5 @@
 # Get-MiniTimeline
-Get-MiniTimeline.ps1 is a PowerShell script utilized to collect several forensic artifacts from a mounted forensic image and auto-generate a MiniTimeline.
+Get-MiniTimeline.ps1 is a PowerShell script utilized to collect several forensic artifacts from a mounted forensic image and auto-generate a beautified MiniTimeline from the data collected.
 
 Forensic Artifacts:  
 * Master File Table ($MFT)  
@@ -58,6 +58,7 @@ https://github.com/dfinke/ImportExcel
 
 ImportRegistryHive.psm1 by Chris Redit   
 https://blog.redit.name/posts/2015/powershell-loading-registry-hive-from-file.html 
+https://www.evild3ad.com/3940/installing-importregistryhive-powershell-module/   
 
 ## Links
 [SANS Webcast: Triage Collection and Timeline Generation with KAPE](https://www.youtube.com/watch?v=iYyWZSNBNcw)  
