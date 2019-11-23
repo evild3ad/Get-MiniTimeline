@@ -6,23 +6,28 @@ Forensic Artifacts:
 * Windows Event Logs  
 * Windows Registry  
 
+## Download
+Download the latest version of Get-MiniTimeline from the [releases](https://github.com/evild3ad/Get-MiniTimeline/releases) section.
+
 ## Usage
-1. Mount your forensic image with e.g. drive letter G: (\\.G:)   
+1. Mount your forensic image with e.g. drive letter G:  
 Note: When your forensic image has multiple partitions you may have to change the path to the Windows partition.   
 
 ![Arsenal Image Mounter](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/AIM.png)
+**Fig 1:** Arsenal Image Mounter (AIM) 
 
 2. Enter your drive letter in `Get-MiniTimeline.ps1`  
 `Input (Source)`  
 $ROOT = "G:"  
 
-3. Run Windows PowerShell as Administrator.  
+3. Run Windows PowerShell console as Administrator.  
 
 ```
 PS > .\Get-MiniTimeline.ps1 dateRange:MM/DD/YYYY-MM/DD/YYYY  
 ```
 
 ![PowerShell](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/PowerShell.png)
+**Fig 2:** Get-MiniTimeline.ps1 (Example)
 
 ![Colorized Excel](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/Colorized-Excel.png)
 
