@@ -1,5 +1,5 @@
 # Get-MiniTimeline
-Get-MiniTimeline.ps1 is a PowerShell script utilized to collect several forensic artifacts from a mounted forensic image and to auto-generate a MiniTimeline (colorized XLSX).
+Get-MiniTimeline.ps1 is a PowerShell script utilized to collect several forensic artifacts from a mounted forensic image and auto-generate a MiniTimeline.
 
 Forensic Artifacts:  
   * Master File Table ($MFT)  
@@ -34,10 +34,10 @@ https://blog.redit.name/posts/2015/powershell-loading-registry-hive-from-file.ht
 1. Mount your forensic image with e.g. drive letter X: (\\.X:)   
    Note: When your forensic image has multiple partitions you may have to change the path to the Windows partition.   
 
-![Arsenal Image Mounter](https://github.com/evild3ad/Get-MiniTimeline/blop/master/Screenshots/AIM.png)
+![Arsenal Image Mounter](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/AIM.png)
 
 2. Enter your drive letter in `Get-MiniTimeline.ps1`  
-   Input (Source)
+   `Input (Source)`  
    $ROOT = "X:"  
 
 3. Run Windows PowerShell as Administrator.  
@@ -46,13 +46,12 @@ https://blog.redit.name/posts/2015/powershell-loading-registry-hive-from-file.ht
 PS > .\Get-MiniTimeline.ps1 dateRange:MM/DD/YYYY-MM/DD/YYYY  
 ```
 
-![PowerShell](https://github.com/evild3ad/Get-MiniTimeline/tree/master/Screenshots/PowerShell.png)
+![PowerShell](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/PowerShell.png)
 
-![Colorized Excel](https://github.com/evild3ad/Get-MiniTimeline/tree/master/Screenshots/Colorized-Excel.png)
+![Colorized Excel](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/Colorized-Excel.png)
 
-![Timeline Explorer](https://github.com/evild3ad/Get-MiniTimeline/tree/master/Screenshots/TLE.png)
+![Timeline Explorer](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/TLE.png)
 
 ## Links
 [https://www.youtube.com/watch?v=iYyWZSNBNcw](https://www.youtube.com/watch?v=iYyWZSNBNcw)  
 [https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape](https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape)  
-<a href="https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape" target="_blank">https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape</a>
