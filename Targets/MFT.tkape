@@ -1,0 +1,14 @@
+Description: Master File Table ($MFT)
+Author: Martin Willing
+Version: 1
+Id: cf748dbc-1c5a-4ae9-8fa8-4aba6505e118
+RecreateDirectories: true
+Targets:
+    -
+        Name: $MFT
+        Category: NTFS Artifacts
+        Path: C:\$MFT
+        IsDirectory: false
+        Recursive: false
+        AlwaysAddToQueue: true
+        Comment: ""
