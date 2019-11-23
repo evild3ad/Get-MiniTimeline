@@ -3,8 +3,8 @@ Get-MiniTimeline.ps1 is a PowerShell script utilized to collect several forensic
 
 Forensic Artifacts:  
 * Master File Table ($MFT)  
-  * Windows Event Logs  
-  * Windows Registry  
+* Windows Event Logs  
+* Windows Registry  
 
 ## Dependencies
 KAPE v0.8.8.0 (2019-10-23)  
@@ -46,12 +46,12 @@ https://blog.redit.name/posts/2015/powershell-loading-registry-hive-from-file.ht
 PS > .\Get-MiniTimeline.ps1 dateRange:MM/DD/YYYY-MM/DD/YYYY  
 ```
 
-![PowerShell](Screenshots/PowerShell.png)
+![PowerShell](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/PowerShell.png)
 
 ![Colorized Excel](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/Colorized-Excel.png)
 
 ![Timeline Explorer](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/TLE.png)
 
 ## Links
-[https://www.youtube.com/watch?v=iYyWZSNBNcw](https://www.youtube.com/watch?v=iYyWZSNBNcw)  
-[https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape](https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape)  
+[SANS Webcast: Triage Collection and Timeline Generation with KAPE](https://www.youtube.com/watch?v=iYyWZSNBNcw)  
+[SANS Digital Forensics and Incident Response Blog: Triage Collection and Timeline Generation with KAPE](https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape)  
