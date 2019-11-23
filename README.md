@@ -7,10 +7,10 @@ Forensic Artifacts:
 * Windows Registry  
 
 ## Download
-Download the latest version of Get-MiniTimeline from the [releases](https://github.com/evild3ad/Get-MiniTimeline/releases) section.
+Download the latest version of **Get-MiniTimeline** from the [releases](https://github.com/evild3ad/Get-MiniTimeline/releases) section.
 
 ## Usage
-1. Mount your forensic image with e.g. drive letter G:  
+1. Mount your forensic image with e.g. drive letter `G:`  
 Note: When your forensic image has multiple partitions you may have to change the path to the Windows partition.   
 
 ![Arsenal Image Mounter](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/AIM.png)
@@ -18,7 +18,7 @@ Note: When your forensic image has multiple partitions you may have to change th
 
 2. Enter your drive letter in `Get-MiniTimeline.ps1`  
 `Input (Source)`  
-$ROOT = "G:"  
+`$ROOT = "G:"`  
 
 3. Run Windows PowerShell console as Administrator.  
 
@@ -27,11 +27,13 @@ PS > .\Get-MiniTimeline.ps1 dateRange:MM/DD/YYYY-MM/DD/YYYY
 ```
 
 ![PowerShell](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/PowerShell.png)
-**Fig 2:** Get-MiniTimeline.ps1 (Example)
+**Fig 2:** Running Get-MiniTimeline.ps1 (Example)
 
 ![Colorized Excel](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/Colorized-Excel.png)
+**Fig 3:** Timeline_Slice.xlsx - The dateRange will be auto-beautified as colorized Excel sheet
 
 ![Timeline Explorer](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/TLE.png)
+**Fig 4:** Timeline.csv - Full Timeline Analysis w/ Timeline Explorer (TLE)
 
 ## Dependencies
 KAPE v0.8.8.0 (2019-10-23)  
