@@ -6,6 +6,28 @@ Forensic Artifacts:
 * Windows Event Logs  
 * Windows Registry  
 
+## Usage
+1. Mount your forensic image with e.g. drive letter G: (\\.G:)   
+Note: When your forensic image has multiple partitions you may have to change the path to the Windows partition.   
+
+![Arsenal Image Mounter](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/AIM.png)
+
+2. Enter your drive letter in `Get-MiniTimeline.ps1`  
+`Input (Source)`  
+$ROOT = "G:"  
+
+3. Run Windows PowerShell as Administrator.  
+
+```
+PS > .\Get-MiniTimeline.ps1 dateRange:MM/DD/YYYY-MM/DD/YYYY  
+```
+
+![PowerShell](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/PowerShell.png)
+
+![Colorized Excel](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/Colorized-Excel.png)
+
+![Timeline Explorer](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/TLE.png)
+
 ## Dependencies
 KAPE v0.8.8.0 (2019-10-23)  
 https://ericzimmerman.github.io/  
@@ -28,30 +50,8 @@ ImportExcel 6.5.2
 https://github.com/dfinke/ImportExcel  
 
 ImportRegistryHive.psm1 by Chris Redit   
-https://blog.redit.name/posts/2015/powershell-loading-registry-hive-from-file.html   
-
-## Usage
-1. Mount your forensic image with e.g. drive letter X: (\\.X:)   
-   Note: When your forensic image has multiple partitions you may have to change the path to the Windows partition.   
-
-![Arsenal Image Mounter](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/AIM.png)
-
-2. Enter your drive letter in `Get-MiniTimeline.ps1`  
-   `Input (Source)`  
-   $ROOT = "X:"  
-
-3. Run Windows PowerShell as Administrator.  
-
-```
-PS > .\Get-MiniTimeline.ps1 dateRange:MM/DD/YYYY-MM/DD/YYYY  
-```
-
-![PowerShell](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/PowerShell.png)
-
-![Colorized Excel](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/Colorized-Excel.png)
-
-![Timeline Explorer](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/TLE.png)
+https://blog.redit.name/posts/2015/powershell-loading-registry-hive-from-file.html 
 
 ## Links
 [SANS Webcast: Triage Collection and Timeline Generation with KAPE](https://www.youtube.com/watch?v=iYyWZSNBNcw)  
-[SANS Digital Forensics and Incident Response Blog: Triage Collection and Timeline Generation with KAPE](https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape)  
+[SANS DFIR Blog: Triage Collection and Timeline Generation with KAPE](https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape)  
