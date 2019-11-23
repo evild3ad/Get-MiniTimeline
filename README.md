@@ -39,7 +39,7 @@ PS > .\Get-MiniTimeline.ps1 dateRange:MM/DD/YYYY-MM/DD/YYYY
 KAPE v0.8.8.0 (2019-10-23)  
 https://ericzimmerman.github.io/  
 https://binaryforay.blogspot.com/search?q=KAPE  
-https://ericzimmerman.github.io/KapeDocs/#!index.md  
+https://ericzimmerman.github.io/KapeDocs/  
 
 EvtxECmd v0.5.2.0 (2019-08-26)  
 https://ericzimmerman.github.io/  
