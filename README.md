@@ -20,8 +20,8 @@ Note: When your forensic image has multiple partitions you may have to change th
 `Input (Source)`  
 `$ROOT = "G:"`  
   
-Optional: You can also change the outpath path.  
-`$OUTPUT = "$env:USERPROFILE\Desktop\MiniTimeline\$ComputerName"`
+  Optional: You can also change the outpath path.  
+  `$OUTPUT = "$env:USERPROFILE\Desktop\MiniTimeline\$ComputerName"`
 
 3. Run Windows PowerShell console as Administrator.  
 
