@@ -18,10 +18,9 @@ Note: When your forensic image has multiple partitions you may have to change th
 
 2. Enter your drive letter in `Get-MiniTimeline.ps1`  
 `Input (Source)`  
-`$ROOT = "G:"`  
-  
-  Optional: You can also change the outpath path.  
-  `$OUTPUT = "$env:USERPROFILE\Desktop\MiniTimeline\$ComputerName"`
+`$ROOT = "G:"`   
+Optional: You can also change the outpath path.  
+`$OUTPUT = "$env:USERPROFILE\Desktop\MiniTimeline\$ComputerName"`
 
 3. Run Windows PowerShell console as Administrator.  
 
