@@ -3,8 +3,8 @@
 # @author:    Martin Willing
 # @copyright: Copyright (c) 2024 Martin Willing. All rights reserved.
 # @contact:   Any feedback or suggestions are always welcome and much appreciated - mwilling@lethal-forensics.com
-# @url:		  https://lethal-forensics.com/
-# @date:	  2024-05-24
+# @url:	      https://lethal-forensics.com/
+# @date:      2024-05-24
 #
 #
 # ██╗     ███████╗████████╗██╗  ██╗ █████╗ ██╗      ███████╗ ██████╗ ██████╗ ███████╗███╗   ██╗███████╗██╗ ██████╗███████╗
