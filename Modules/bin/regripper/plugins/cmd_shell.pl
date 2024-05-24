@@ -2,6 +2,7 @@
 # cmd_shell
 # 
 # Change History
+#   20200515 - udpated date output format
 #   20130405 - added Clients subkey
 #   20100830 - added "cs" shell command to the path
 #   20080328 - created
@@ -10,7 +11,7 @@
 #   http://www.microsoft.com/security/portal/Threat/Encyclopedia/Entry.aspx?
 #        Name=TrojanClicker%3AWin32%2FVB.GE
 #
-# copyright 2013 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package cmd_shell;
@@ -21,7 +22,7 @@ my %config = (hive          => "Software",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 1,
-              version       => 20130405);
+              version       => 20200515);
 
 sub getConfig{return %config}
 
@@ -45,7 +46,7 @@ sub pluginmain {
 	::logMsg("Launching cmd_shell v.".$VERSION);
 	::rptMsg("cmd_shell v.".$VERSION); # banner
   ::rptMsg("(".$config{hive}.") ".getShortDescr()."\n"); # banner 
-	my @shells = ("exe","cmd","bat","cs","hta","pif");
+	my @shells = ("exe","cmd","bat","cs","hta","pif","msc");
 	
 	my $reg = Parse::Win32Registry->new($hive);
 	my $root_key = $reg->get_root_key;
@@ -55,25 +56,13 @@ sub pluginmain {
 		my $key;
 		if ($key = $root_key->get_subkey($key_path)) {
 			::rptMsg($key_path);
-			::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+			::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 #			::rptMsg("");
 			my $val;
 			eval {
 				$val = $key->get_value("")->get_data();
 				::rptMsg("  Cmd: ".$val);
-				
-				if ($sh eq "hta") {
-					if ($val eq "C:\\Windows\\SysWOW64\\mshta\.exe \"%1\" %*" || $val eq "C:\\WINDOWS\\system32\\mshta\.exe \"%1\" %*") {
-						
-					}
-					else {
-						::alertMsg("ALERT: cmd_shell: ".$key_path." warning: ".$val);
-					}
-				}
-				else {
-					::alertMsg("ALERT: cmd_shell: ".$key_path." warning: ".$val) unless ($val eq "\"%1\" %*");
-				}
-				
+	
 				::rptMsg("");
 			};
 			::rptMsg("Error: ".$@) if ($@);
@@ -90,7 +79,7 @@ sub pluginmain {
 	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())." (UTC)");
 		
 		eval {
 			my $cmd = $key->get_value("")->get_data();

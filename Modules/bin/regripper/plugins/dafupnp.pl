@@ -6,11 +6,12 @@
 # 	(UPnP) data.  DAFUPnP is used to stream media across a network.
 #
 # History:
+#   20200525 - minor updates
 #   20180705 - updated, code tweaks
 #   20180628 - Created
 # 
 #
-# Author: M. Jones, mictjon@gmail.com
+# Original Author: M. Jones, mictjon@gmail.com
 #-----------------------------------------------------------
 package dafupnp;
 use strict;
@@ -20,7 +21,7 @@ my %config = (hive          => "System",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20180705);
+              version       => 20200525);
 			  
 my $VERSION = getVersion();
 			  

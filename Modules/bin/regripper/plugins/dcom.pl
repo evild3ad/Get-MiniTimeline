@@ -8,12 +8,13 @@
 #
 #
 # Change history
+#   20200525 - updated date output format
 #   20151203 - created
 #
 # References
 #   http://blog.backslasher.net/setting-dynamic-rpc-port-ranges.html
 #
-# Copyright (c) 2015 QAR, LLC
+# Copyright (c) 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package dcom;
@@ -25,8 +26,8 @@ my %config = (hive          => "Software",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              category      => "system config",
-              version       => 20151203);
+              category      => "config",
+              version       => 20200525);
 my $VERSION = getVersion();
 
 # Functions #
@@ -53,7 +54,7 @@ sub pluginmain {
 	my $key_path = "Microsoft\\Rpc\\Internet";
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 
 		eval {

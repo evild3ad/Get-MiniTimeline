@@ -2,6 +2,7 @@
 # ddo.pl
 #
 # History
+#  20200525 - updated date output format
 #  20140414 - created
 #
 # Registry entries created by devices that support device stage
@@ -45,7 +46,7 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg("DeviceDisplayObjects");
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time: ".gmtime($key->get_timestamp())." (UTC)\n");
+		::rptMsg("LastWrite Time: ".::getDateFromEpoch($key->get_timestamp())."Z\n");
 		my @vals;
 		eval {
 			@vals = $key->get_list_of_values();

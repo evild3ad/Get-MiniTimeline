@@ -3,20 +3,28 @@
 # Region Information
 # Get Geo Nation information from the NTUSER.DAT hive file
 #
+# History:
+#   20200517 - updated date output format
+#   20091116 - created
+#
+#
 # Written By:
 # Fahad Alzaabi
 # falzaab@masonlive.gmu.edu
 # George Mason University,CFRS 763 
+#
+# updated: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package nation;
 use strict;
 
-my %config = (hive          => "ntuser.dat",
+my %config = (hive          => "ntuser\.dat",
+							category      => "config",
               osmask        => 22,
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20091116);
+              version       => 20200517);
 
 sub getConfig{return %config}
 
@@ -43,7 +51,7 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg("Nation Information Check");
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite time: ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 		my $nation = $key->get_value("Nation")->get_data();
 		::rptMsg("The Region value is : ".$nation);
@@ -349,17 +357,10 @@ sub pluginmain {
 		::rptMsg("The Country Is: Bonaire Saint Eustatius and Saba") if ($nation == 161832258);
 		::rptMsg("For more information please visit the link below:");
 		::rptMsg("https://msdn.microsoft.com/en-us/library/aa723531.aspx");
-
-
-
 	}
-
 	else {
 		::rptMsg($key_path." not found.");
 	}
-
-
 	::rptMsg("");
-
 }
 1;

@@ -3,26 +3,25 @@
 #   
 #
 # Change history
+#   20200525 - updated date output format
 #   20140508 - created
 #
 # References
 #   http://www.hexacorn.com/blog/2014/04/27/beyond-good-ol-run-key-part-11/
 #
-# Copyright 2014 QAR, LLC
+# Copyright 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
-# Require #
 package profiler;
 use strict;
 
-# Declarations #
 my %config = (hive          => "NTUSER\.DAT, System",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
               category      => "autostart",
-              version       => 20140510);
+              version       => 20200525);
 my $VERSION = getVersion();
 
 # Functions #
@@ -51,9 +50,8 @@ sub pluginmain {
 
 	if ($key = $root_key->get_subkey($key_path)) {
 
-		# Return # plugin name, registry key and last modified date #
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 
 		my @vals = $key->get_list_of_values();

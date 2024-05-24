@@ -50,8 +50,9 @@ sub pluginmain {
 #		::rptMsg("RecentDocs");
 #		::rptMsg("**All values printed in MRUList\\MRUListEx order.");
 #		::rptMsg($key_path);
-#		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+#		::rptMsg("LastWrite Time: ".gmtime($key->get_timestamp())." (UTC)");
 		$lw = $key->get_timestamp();
+		
 # Get RecentDocs values		
 		my %rdvals = getRDValues($key);
 		if (%rdvals) {
@@ -118,9 +119,9 @@ sub getRDValues {
 			else {
 # New code
 				$data = decode("ucs-2le", $data);
-				my $file = (split(/\x00/,$data))[0];
-#				my $file = (split(/\x00\x00/,$data))[0];
-#				$file =~ s/\x00//g;
+				my $file = (split(/\00/,$data))[0];
+#				my $file = (split(/\00\00/,$data))[0];
+#				$file =~ s/\00//g;
 				$rdvals{$name} = $file;
 			}
 		}

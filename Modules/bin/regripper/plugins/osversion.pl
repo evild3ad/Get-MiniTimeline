@@ -5,13 +5,14 @@
 # not found" is a good thing.
 #
 # Change history
+#  20200511 - updated date output format
 #  20120601 - created
 #
 # References
 #  Search Google for "Software\Microsoft\OSVersion" - you'll get several
 #    hits that refer to various malware; 
 # 
-# copyright 2012 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package osversion;
@@ -22,7 +23,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20120601);
+              version       => 20200511);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -47,7 +48,7 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg("OSVersion");
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 		my $os;
 		eval {

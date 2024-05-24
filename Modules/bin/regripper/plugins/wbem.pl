@@ -5,10 +5,13 @@
 #   Keylogger.
 #
 # History
+#   20200511 - updated date output format
+#   20190729 - Updated with 'autorecover mofs' info
 #   20120306 - created
 #   
 #
-# copyright 2012, Quantum Analytics Research, LLC
+# copyright 2020, Quantum Analytics Research, LLC
+# author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package wbem;
 use strict;
@@ -18,12 +21,12 @@ my %config = (hive          => "Software",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20120306);
+              version       => 20200511);
 
 sub getConfig{return %config}
 
 sub getShortDescr {
-	return "Get contents of WBEM\\WDM key";	
+	return "Get some contents from WBEM key";	
 }
 sub getDescr{}
 sub getRefs {}
@@ -46,7 +49,7 @@ sub pluginmain {
 	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 
 		my @vals = $key->get_list_of_values();
@@ -59,6 +62,31 @@ sub pluginmain {
 		else {
 			::rptMsg($key_path." has no values.");
 		}
+	}
+	else {
+		::rptMsg($key_path." not found.");
+	}
+
+# Added 20190729
+# Ref: https://docs.microsoft.com/en-us/windows/win32/wmisdk/pragma-autorecover	
+# Ref: https://twitter.com/mattifestation/status/1021879005815816192
+	$key_path = "Microsoft\\WBEM\\CIMOM";
+	if ($key = $root_key->get_subkey($key_path)) {
+		::rptMsg($key_path);
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
+		::rptMsg("");
+		
+		my $mofs;
+		my $moftime;
+		eval {
+			$moftime = $key->get_value("Autorecover MOFs Timestamp")->get_data();
+			::rptMsg("");
+		};
+		
+		eval {
+			$mofs = $key->get_value("Autorecover MOFs")->get_data();
+			::rptMsg("Autorecover MOFs: ".$mofs);
+		};
 	}
 	else {
 		::rptMsg($key_path." not found.");

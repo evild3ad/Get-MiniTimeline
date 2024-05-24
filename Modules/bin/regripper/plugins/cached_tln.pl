@@ -26,7 +26,7 @@ my %config = (hive          => "NTUSER.DAT",
 
 sub getConfig{return %config}
 sub getShortDescr {
-	return "Gets cached Shell Extensions from NTUSER.DAT hive (TLN)";	
+	return "Gets cached Shell Extensions from NTUSER\.DAT hive (TLN)";	
 }
 sub getDescr{}
 sub getRefs {}

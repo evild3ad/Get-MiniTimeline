@@ -3,6 +3,7 @@
 # Checks key for files to autostart from cmd.exe
 #
 # Change History
+#   20200515 - updated date output format
 #   20190223 - added reference
 #   20130425 - added alertMsg() functionality
 #   20130115 - created
@@ -12,7 +13,7 @@
 #
 # Category: autostart,malware,programexecution 
 #
-# copyright 2013 Quantum Analytics Research,
+# copyright 2020 Quantum Analytics Research,
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package cmdproc;
@@ -23,7 +24,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20190223);
+              version       => 20200515);
 
 sub getConfig{return %config}
 
@@ -50,7 +51,7 @@ sub pluginmain {
 	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		
 		my $auto;
 		eval {

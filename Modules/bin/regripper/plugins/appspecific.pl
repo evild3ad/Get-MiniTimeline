@@ -3,12 +3,13 @@
 # 
 #
 # Change history
+#   20200515 - updated date output format
 #   20120820 - created
 #
 # References
 #
 # 
-# copyright 2012 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package appspecific;
@@ -19,7 +20,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20120820);
+              version       => 20200515);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -48,17 +49,15 @@ sub pluginmain {
 		my @subkeys = $key->get_list_of_subkeys();
 		if (scalar(@subkeys) > 0) {
 			foreach my $s (@subkeys) { 
-				::rptMsg($s->get_name()." [".gmtime($s->get_timestamp())." (UTC)]");
+				::rptMsg($s->get_name()." [".::getDateFromEpoch($s->get_timestamp())."Z]");
 				
 				my $ts;
 				eval {
 					$ts = $s->get_value("Timestamp")->get_data();
 					my $t = ::getTime(0,$ts);
-					::rptMsg("Timestamp: ".gmtime($t));
+					::rptMsg("Timestamp: ".::getDateFromEpoch($t)."Z");
 					
 				};
-				
-				
 				::rptMsg("");
 			}
 		}

@@ -2,6 +2,7 @@
 # bam.pl
 #
 # History:
+#  20200427 - updated output date format
 #  20180225 - created
 #
 # References:
@@ -10,7 +11,7 @@
 #  http://batcmd.com/windows/10/services/bam/
 # 
 # 
-# copyright 2018 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package bam;
@@ -24,7 +25,7 @@ my %config = (hive          => "System",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 31,  #XP - Win7
-              version       => 20180225);
+              version       => 20200427);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -56,7 +57,7 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		$current = $key->get_value("Current")->get_data();
 		$ccs = "ControlSet00".$current;
-		my $bam_path = $ccs."\\Services\\bam\\UserSettings";
+		my $bam_path = $ccs."\\Services\\bam\\State\\UserSettings";
 		my $bam;
 		if ($bam = $root_key->get_subkey($bam_path)) {
 			my @sk = $bam->get_list_of_subkeys();
@@ -94,7 +95,7 @@ sub processKey {
 			if ($v->get_type() == 3) {
 				my ($t0,$t1) = unpack("VV",substr($v->get_data(),0,8));
 				$t = ::getTime($t0,$t1);
-				::rptMsg("  ".gmtime($t)." - ".$name);
+				::rptMsg("  ".::getDateFromEpoch($t)."Z"." - ".$name);
 			}
 				
 		}

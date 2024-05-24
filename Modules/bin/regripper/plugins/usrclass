@@ -1,8 +1,8 @@
-# 20170415 *ALL* Plugins that apply on USRCLASS hive, alphabetical order
-cmd_shell_u
-inprocserver
+appx
+clsid
+exefile
 muicache
-muicache_tln
 photos
+scriptleturl
 shellbags
-shellbags_tln
+uacbypass

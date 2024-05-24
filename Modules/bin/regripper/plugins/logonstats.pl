@@ -2,12 +2,13 @@
 # LogonStats
 #  
 # Change history
+#  20200517 - minor updates
 #  20180128 - created
 #
 # References
 #  https://twitter.com/jasonshale/status/623081308722475009
 # 
-# copyright 2018 H. Carvey, keydet89@yahoo.com
+# copyright 2020 H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package logonstats;
 use strict;
@@ -17,7 +18,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20180128);
+              version       => 20200517);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -34,8 +35,8 @@ sub pluginmain {
 	my $class = shift;
 	my $ntuser = shift;
 	::logMsg("Launching logonstats v.".$VERSION);
-	::rptMsg("logonstats v.".$VERSION); # banner
-  ::rptMsg("- ".getShortDescr()."\n"); # banner
+	::rptMsg("logonstats v.".$VERSION); 
+  ::rptMsg(getShortDescr()."\n"); 
 	my $reg = Parse::Win32Registry->new($ntuser);
 	my $root_key = $reg->get_root_key;
 
@@ -46,12 +47,13 @@ sub pluginmain {
 		eval {
 			my $flt = $key->get_value("FirstLogonTime")->get_data();
 			my $str = convertSystemTime($flt);
-			::rptMsg("FirstLogonTime:                       ".$str);
+			::rptMsg("FirstLogonTime                     :  ".$str);
 		};
+		::rptMsg("FirstLogonTime error: ".$@) if ($@);
 		
 		eval {
 			my $oc = $key->get_value("FirstLogonTimeOnCurrentInstallation")->get_data();
-			my $i = convertSystemTime($oc);
+			my ($i,$g) = convertSystemTime($oc);
 			::rptMsg("FirstLogonTimeOnCurrentInstallation:  ".$i);
 		};
 	}
@@ -59,8 +61,6 @@ sub pluginmain {
 		::rptMsg($key_path." not found.");
 	}
 }
-
-
 
 #-----------------------------------------------------------
 # convertSystemTime()
@@ -72,11 +72,12 @@ sub convertSystemTime {
 	              "Aug","Sep","Oct","Nov","Dec");
 	my @days = ("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
 	my ($yr,$mon,$dow,$dom,$hr,$min,$sec,$ms) = unpack("v*",$date);
+	$dom = "0".$dom if ($dom < 10);
 	$hr = "0".$hr if ($hr < 10);
 	$min = "0".$min if ($min < 10);
 	$sec = "0".$sec if ($sec < 10);
 	my $str = $days[$dow]." ".$months[$mon - 1]." ".$dom." ".$hr.":".$min.":".$sec." ".$yr;
-	return $str;
+  return $str;
 }
 
 1;

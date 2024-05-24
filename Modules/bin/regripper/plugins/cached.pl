@@ -4,6 +4,7 @@
 #   NTUSER.DAT hive
 #
 # History:
+#   20200525 - updated date output format
 #   20150608 - created
 #
 # References:
@@ -11,22 +12,22 @@
 #   http://www.nobunkum.ru/analytics/en-com-hijacking
 #
 #
-# copyright 2015 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package cached;
 use strict;
 
-my %config = (hive          => "NTUSER.DAT",
+my %config = (hive          => "NTUSER\.DAT",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20150608);
+              version       => 20200525);
 
 sub getConfig{return %config}
 sub getShortDescr {
-	return "Gets cached Shell Extensions from NTUSER.DAT hive";	
+	return "Gets cached Shell Extensions from NTUSER\.DAT hive";	
 }
 sub getDescr{}
 sub getRefs {}
@@ -61,7 +62,7 @@ sub pluginmain {
 	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 
 		my @vals = $key->get_list_of_values();
@@ -69,8 +70,8 @@ sub pluginmain {
 			foreach my $v (@vals) {
 				my ($clsid1, $clsid2, $mask) = split(/\s/,$v->get_name(),3);
 				my @t = unpack("VV",substr($v->get_data(),8,8));
-				my $tm = gmtime(::getTime($t[0],$t[1]));
-				my $str = $tm."  First Load: ".$clsid1." (";
+				my $tm = ::getDateFromEpoch(::getTime($t[0],$t[1]));
+				my $str = $tm."Z  First Load: ".$clsid1." (";
 				if (exists $clsids{$clsid2}) {
 					$str .= $clsids{$clsid2}.")";
 				}

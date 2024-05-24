@@ -1,0 +1,92 @@
+Author: Mark Hallman mark.hallman@gmail.com
+Description: BITS transfer has started
+EventId: 59
+Channel: Microsoft-Windows-Bits-Client/Operational
+Provider: Microsoft-Windows-Bits-Client
+Maps:
+  -
+    Property: PayloadData1
+    PropertyValue: "jobTitle: %jobTitle%"
+    Values:
+      -
+        Name: jobTitle
+        Value: "/Event/EventData/Data[@Name=\"name\"]"
+  -
+    Property: PayloadData2
+    PropertyValue: "jobId: %jobId%"
+    Values:
+      -
+        Name: jobId
+        Value: "/Event/EventData/Data[@Name=\"Id\"]"
+  -
+    Property: PayloadData3
+    PropertyValue: "URL: %url%"
+    Values:
+      -
+        Name: url
+        Value: "/Event/EventData/Data[@Name=\"url\"]"
+  -
+    Property: PayloadData4
+    PropertyValue: "Peer: %peer%"
+    Values:
+      -
+        Name: peer
+        Value: "/Event/EventData/Data[@Name=\"peer\"]"
+  -
+    Property: PayloadData5
+    PropertyValue: "Total Bytes: %bytesTotal% (Transferred: %bytesTransferred%)"
+    Values:
+      -
+        Name: bytesTotal
+        Value: "/Event/EventData/Data[@Name=\"bytesTotal\"]"
+      -
+        Name: bytesTransferred
+        Value: "/Event/EventData/Data[@Name=\"bytesTransferred\"]"
+  -
+    Property: PayloadData6
+    PropertyValue: "Bytes Transferred from Peer: %bytesTransferredFromPeer%"
+    Values:
+      -
+        Name: bytesTransferredFromPeer
+        Value: "/Event/EventData/Data[@Name=\"bytesTransferredFromPeer\"]"
+
+# Documentation:
+# https://kb.eventtracker.com/evtpass/evtPages/EventId_59_Microsoft-Windows-Bits-Client_64109.asp
+# https://jpcertcc.github.io/ToolAnalysisResultSheet/details/BITS.htm
+# https://www.sans.org/reading-room/whitepapers/forensics/bits-forensics-39195
+# https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-r2-and-2008/cc734695(v=ws.10)
+# https://www.adash.org/jfb/Training247/Bit_Deep_Dive_Tshoot.htm
+# https://docs.microsoft.com/de-de/security-updates/windowsupdateservices/18127392
+# https://github.com/nasbench/EVTX-ETW-Resources/blob/main/ETWProvidersCSVs/Internal/Microsoft-Windows-Bits-Client.csv
+#
+# Example Event Data:
+# <Event>
+#  <System>
+#    <Provider Name="Microsoft-Windows-Bits-Client" Guid="ef6y679b-46c1-414e-bb95-e76b077bd51e" />
+#    <EventID>59</EventID>
+#    <Version>1</Version>
+#    <Level>4</Level>
+#    <Task>0</Task>
+#    <Opcode>1</Opcode>
+#    <Keywords>0x4000900000000000</Keywords>
+#    <TimeCreated SystemTime="2019-02-17 11:23:12.2815793" />
+#    <EventRecordID>16907</EventRecordID>
+#    <Correlation ActivityID="f56796f9-02a6-4bdf-9967-f21c8f1d4b54" />
+#    <Execution ProcessID="679" ThreadID="2580" />
+#    <Channel>Microsoft-Windows-Bits-Client/Operational</Channel>
+#    <Computer>HOSTNAME.domain.com</Computer>
+#    <Security UserID="S-1-5-18" />
+#  </System>
+#  <EventData>
+#    <Data Name="transferId">f5e116f9-02a6-4bdf-9967-f21c8f1d4b54</Data>
+#    <Data Name="name">name</Data>
+#    <Data Name="Id">c29ef679-6c03-4644-992d-b7fe884e117b</Data>
+#    <Data Name="url">URL</Data>
+#    <Data Name="peer"></Data>
+#    <Data Name="fileTime">2001-01-01 00:00:00.0000000</Data>
+#    <Data Name="fileLength">679</Data>
+#    <Data Name="bytesTotal">679</Data>
+#    <Data Name="bytesTransferred">0</Data>
+#    <Data Name="bytesTransferredFromPeer">0</Data>
+#  </EventData>
+# </Event>

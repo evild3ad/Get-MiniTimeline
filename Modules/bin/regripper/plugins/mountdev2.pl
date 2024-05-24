@@ -4,7 +4,8 @@
 # MountedDevices
 # 
 # Change history
-#   20140721 - update provided by Espen Øyslebø <eoyslebo@gmail.com>
+#   20200517 - updated date output format
+#   20140721 - update provided by Espen Ã˜yslebÃ¸ <eoyslebo@gmail.com>
 #   20130530 - updated to output Disk Signature in correct format, thanks to
 #              info provided by Tom Yarrish (see ref.)
 #   20120403 - commented out time stamp info from volume GUIDs, added
@@ -15,14 +16,14 @@
 # References
 #   http://blogs.technet.com/b/markrussinovich/archive/2011/11/08/3463572.aspx
 # 
-# copyright 2013 QAR, LLC
+# copyright 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package mountdev2;
 use strict;
 
 # Required for 32-bit versions of perl that don't support unpack Q
-# update provided by Espen Øyslebø <eoyslebo@gmail.com>
+# update provided by Espen Ã˜yslebÃ¸ <eoyslebo@gmail.com>
 my $little;
 BEGIN { $little= unpack "C", pack "S", 1; }
 sub squad {
@@ -52,7 +53,7 @@ my %config = (hive          => "System",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20140721);
+              version       => 20200517);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -79,7 +80,7 @@ sub pluginmain {
 	my (%md,%dos,%vol,%offset,%macs);
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite time = ".gmtime($key->get_timestamp())."Z");
+		::rptMsg("LastWrite time = ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 		my @vals = $key->get_list_of_values();
 		if (scalar(@vals) > 0) {
@@ -89,7 +90,7 @@ sub pluginmain {
 				if ($len == 12) {
 					my $sig = _translateBinary(substr($data,0,4));
 
-# Section added by Espen Øyslebø <eoyslebo@gmail.com>
+# Section added by Espen Ã˜yslebÃ¸ <eoyslebo@gmail.com>
 # gets the offset, which can be a value larger than what
 # can be handled by 32-bit Perl
 					my $o; #offset
@@ -104,7 +105,7 @@ sub pluginmain {
 					$offset{$v->get_name()} = $o;
 				}
 				elsif ($len > 12) {
-					$data =~ s/\x00//g;
+					$data =~ s/\00//g;
 					push(@{$md{$data}},$v->get_name());
 				}
 				else {
@@ -123,12 +124,12 @@ sub pluginmain {
 				next unless ($v =~ m/^\\\?\?\\Volume\{/);
 				my $id = $v;
 				$id =~ s/^\\\?\?\\Volume\{//;
-				$id =~ s/}$//;
+				$id =~ s/\}$//;
 				$id =~ s/-//g;
 				my $l = hex(substr($id,0,8));
 				my $m = hex(substr($id,8,4));
 				my $h = hex(substr($id,12,4)) & 0x0fff;
-				$h = $m | $h << 16;
+				my $h = $m | $h << 16;
 				my $t = (::getTime($l,$h) - 574819200);
 				::rptMsg($v);
 				::rptMsg("  ".gmtime($t));
@@ -142,7 +143,7 @@ sub pluginmain {
 					if ($item =~ m/^\\\?\?\\Volume/) {
 						my $id = $item;
 						$id =~ s/^\\\?\?\\Volume\{//;
-						$id =~ s/}$//;
+						$id =~ s/\}$//;
 #						$id =~ s/-//g;
 #						my $l = hex(substr($id,0,8));
 #						my $m = hex(substr($id,8,4));

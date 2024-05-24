@@ -1,15 +1,13 @@
 #-----------------------------------------------------------
 # lastloggedon
 # 
-# 
-# References
-#
 #
 # History:
+#  20200517 - updated date output format
 #  20180614 - Updated by Michael Godfrey
 #  20160531 - created
 #
-# copyright 2018 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package lastloggedon;
@@ -20,7 +18,7 @@ my %config = (hive          => "Software",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20160531);
+              version       => 20200517);
 
 sub getConfig{return %config}
 
@@ -51,7 +49,7 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg("LastLoggedOn");
 		::rptMsg($key_path);
-		::rptMsg("LastWrite: ".gmtime($key->get_timestamp()));
+		::rptMsg("LastWrite: ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 		
 		eval {

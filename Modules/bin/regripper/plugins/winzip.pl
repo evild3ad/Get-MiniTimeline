@@ -2,10 +2,11 @@
 # WinZip
 # 
 # History
+#  20200526 - updated date output format
 #  20140730 - updated to include mru/archives info
 #  20080325 - created
 # 
-# copyright 2014 QAR, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package winzip;
@@ -16,7 +17,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20140730);
+              version       => 20200526);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -51,7 +52,7 @@ sub pluginmain {
 		
 		if (exists $sk{'extract'}) {
 			my $tag = "extract";
-			::rptMsg($key_path."\\extract  [".gmtime($sk{'extract'}->get_timestamp)."]");
+			::rptMsg($key_path."\\extract  [".::getDateFromEpoch($sk{'extract'}->get_timestamp)."Z]");
 			my @vals = $sk{'extract'}->get_list_of_values();
 			my %ext;
 			foreach my $v (@vals) {
@@ -71,7 +72,7 @@ sub pluginmain {
 		
 		if (exists $sk{'filemenu'}) {
 			my $tag = "filemenu";
-			::rptMsg($key_path."\\filemenu  [".gmtime($sk{'extract'}->get_timestamp)."]");
+			::rptMsg($key_path."\\filemenu  [".::getDateFromEpoch($sk{'filemenu'}->get_timestamp)."Z]");
 			my @vals = $sk{'filemenu'}->get_list_of_values();
 			my %ext;
 			foreach my $v (@vals) {
@@ -91,7 +92,7 @@ sub pluginmain {
 # added 20140730
 		my $archives;
 		if ($archives = $key->get_subkey("mru\\archives")) {
-			::rptMsg("mru\\archives subkey  [".gmtime($archives->get_timestamp())."]");
+			::rptMsg("mru\\archives subkey  [".::getDateFromEpoch($archives->get_timestamp())."Z]");
 			
 			my @vals = $archives->get_list_of_values();
 			if (scalar @vals > 0) {

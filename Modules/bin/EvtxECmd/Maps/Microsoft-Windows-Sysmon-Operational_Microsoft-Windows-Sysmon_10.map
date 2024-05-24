@@ -1,0 +1,135 @@
+Author: Andrew Rathbun
+Description: ProcessAccess
+EventId: 10
+Channel: Microsoft-Windows-Sysmon/Operational
+Provider: Microsoft-Windows-Sysmon
+Maps:
+  -
+    Property: UserName
+    PropertyValue: "SourceUser: %SourceUser% | TargetUser: %TargetUser%"
+    Values:
+      -
+        Name: SourceUser
+        Value: "/Event/EventData/Data[@Name=\"SourceUser\"]"
+      -
+        Name: TargetUser
+        Value: "/Event/EventData/Data[@Name=\"TargetUser\"]"
+  -
+    Property: ExecutableInfo
+    PropertyValue: "CallTrace: %CallTrace%"
+    Values:
+      -
+        Name: CallTrace
+        Value: "/Event/EventData/Data[@Name=\"CallTrace\"]"
+  -
+    Property: PayloadData2
+    PropertyValue: "GrantedAccess: %GrantedAccess%"
+    Values:
+      -
+        Name: GrantedAccess
+        Value: "/Event/EventData/Data[@Name=\"GrantedAccess\"]"
+  -
+    Property: PayloadData3
+    PropertyValue: "SourceProcessID: %SourceProcessID%, SourceProcessGUID: %SourceProcessGUID%"
+    Values:
+      -
+        Name: SourceProcessGUID
+        Value: "/Event/EventData/Data[@Name=\"SourceProcessGuid\"]"
+      -
+        Name: SourceProcessID
+        Value: "/Event/EventData/Data[@Name=\"SourceProcessId\"]"
+  -
+    Property: PayloadData4
+    PropertyValue: "SourceImage: %SourceImage%"
+    Values:
+      -
+        Name: SourceImage
+        Value: "/Event/EventData/Data[@Name=\"SourceImage\"]"
+
+  -
+    Property: PayloadData5
+    PropertyValue: "TargetProcessID: %TargetProcessID%, TargetProcessGUID: %TargetProcessGUID%"
+    Values:
+      -
+        Name: TargetProcessGUID
+        Value: "/Event/EventData/Data[@Name=\"TargetProcessGuid\"]"
+      -
+        Name: TargetProcessID
+        Value: "/Event/EventData/Data[@Name=\"TargetProcessId\"]"
+  -
+    Property: PayloadData6
+    PropertyValue: "TargetImage: %TargetImage%"
+    Values:
+      -
+        Name: TargetImage
+        Value: "/Event/EventData/Data[@Name=\"TargetImage\"]"
+
+Lookups:
+  -
+    Name: GrantedAccess
+    Default: Unknown code
+    Values:
+      0x1010: 0x1010 (PROCESS_QUERY_LIMITED_INFORMATION & PROCESS_VM_READ)
+      0x1fffff: 0x1fffff (PROCESS_ALL_ACCESS)
+      0x0002: 0x0002 (PROCESS_CREATE_THREAD)
+      0x0080: 0x0080 (PROCESS_CREATE_PROCESS)
+      0x0040: 0x0040 (PROCESS_DUP_HANDLE)
+      0x0400: 0x0400 (PROCESS_QUERY_INFORMATION)
+      0x1000: 0x1000 (PROCESS_QUERY_LIMITED_INFORMATION)
+      0x0200: 0x0200 (PROCESS_SET_INFORMATION)
+      0x0100: 0x0100 (PROCESS_SET_QUOTA)
+      0x0800: 0x0800 (PROCESS_SUSPEND_RESUME)
+      0x0001: 0x0001 (PROCESS_TERMINATE)
+      0x0008: 0x0008 (PROCESS_VM_OPERATION)
+      0x0010: 0x0010 (PROCESS_VM_READ)
+      0x0020: 0x0020 (PROCESS_VM_WRITE)
+      0x00100000L: 0x00100000L (SYNCHRONIZE)
+      0x1410: 0x1410 (Possible lsass.exe exploitation)
+      0x143A: 0x143A (Possible lsass.exe exploitation)
+      0x1438: 0x1438 (Possible lsass.exe exploitation)
+      0x1400: 0x1400 (Possible lsass.exe exploitation)
+      0x0820: 0x0820 (Possible process injection)
+
+# Documentation:
+# https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon#events
+# https://github.com/sbousseaden/EVTX-ATTACK-SAMPLES
+# https://www.blackhillsinfosec.com/a-sysmon-event-id-breakdown/
+# https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/default.aspx - filter on Sysmon
+# https://docs.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights?redirectedfrom=MSDN
+# https://cyberwardog.blogspot.com/2017/03/chronicles-of-threat-hunter-hunting-for_22.html
+# https://github.com/trustedsec/SysmonCommunityGuide/blob/master/process-access.md
+# https://github.com/nasbench/EVTX-ETW-Resources/blob/main/ETWProvidersCSVs/ThirdParty/Microsoft-Windows-Sysmon.csv
+# https://docs.splunksecurityessentials.com/content-detail/detect_credential_dumping_through_lsass_access/
+#
+# Example Event Data:
+# <Event>
+#  <System>
+#    <Provider Name="Microsoft-Windows-Sysmon" Guid="5770385f-c22a-43e0-bf4c-06f5698ffbd9" />
+#    <EventID>10</EventID>
+#    <Version>3</Version>
+#    <Level>4</Level>
+#    <Task>10</Task>
+#    <Opcode>0</Opcode>
+#    <Keywords>0x8000000000000000</Keywords>
+#    <TimeCreated SystemTime="2019-04-30 12:43:43.7841796" />
+#    <EventRecordID>9058</EventRecordID>
+#    <Correlation />
+#    <Execution ProcessID="1964" ThreadID="316" />
+#    <Channel>Microsoft-Windows-Sysmon/Operational</Channel>
+#    <Computer>IEWIN7</Computer>
+#    <Security UserID="S-1-5-18" />
+#  </System>
+#  <EventData>
+#    <Data Name="RuleName"></Data>
+#    <Data Name="UtcTime">2019-04-30 12:43:43.784</Data>
+#    <Data Name="SourceProcessGUID">365abb72-4055-5cc8-0000-0010769d0b00</Data>
+#    <Data Name="SourceProcessId">1532</Data>
+#    <Data Name="SourceThreadId">2284</Data>
+#    <Data Name="SourceImage">\\VBOXSVR\HTools\voice_mail.msg.exe</Data>
+#    <Data Name="TargetProcessGUID">365abb72-3fde-5cc8-0000-0010142b0000</Data>
+#    <Data Name="TargetProcessId">264</Data>
+#    <Data Name="TargetImage">C:\Windows\System32\smss.exe</Data>
+#    <Data Name="GrantedAccess">0x1F1FFF</Data>
+#    <Data Name="CallTrace">C:\Windows\SYSTEM32\ntdll.dll+4595c|C:\Windows\system32\KERNELBASE.dll+8185|UNKNOWN(01B51606)|UNKNOWN(01B51F41)|UNKNOWN(01B51515)|UNKNOWN(014A7486)|UNKNOWN(014A73A0)|UNKNOWN(014A78A3)|C:\Windows\system32\kernel32.dll+4ef8c|C:\Windows\SYSTEM32\ntdll.dll+6367a|C:\Windows\SYSTEM32\ntdll.dll+6364d</Data>
+#  </EventData>
+# </Event>

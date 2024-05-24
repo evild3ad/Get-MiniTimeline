@@ -4,13 +4,15 @@
 # 
 #
 # History:
+#  20200515 - updated date output format
+#  20190819 - updated to include time stamps
 #  20141111 - updated check for key LastWrite times
 #  20141015 - added additional checks
 #  20120523 - Added support for a DeviceClasses subkey that includes 
 #             "WpdBusEnum" in the names; from MarkW and ColinC
 #  20120410 - created
 #
-# copyright 2012 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package wpdbusenum;
@@ -21,12 +23,12 @@ my %config = (hive          => "System",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20141111);
+              version       => 20200515);
 
 sub getConfig{return %config}
 
 sub getShortDescr {
-	return "Get WpdBusEnumRoot subkey info";	
+	return "Get WpdBusEnum subkey info";	
 }
 sub getDescr{}
 sub getRefs {}
@@ -40,8 +42,8 @@ sub pluginmain {
 	my $class = shift;
 	my $hive = shift;
 	::logMsg("Launching wpdbusenum v.".$VERSION);
-	::rptMsg("wpdbusenum v.".$VERSION); # banner
-  ::rptMsg("(".getHive().") ".getShortDescr()."\n"); # banner
+	::rptMsg("wpdbusenum v.".$VERSION); 
+  ::rptMsg("(".getHive().") ".getShortDescr()."\n");
 	$reg = Parse::Win32Registry->new($hive);
 	my $root_key = $reg->get_root_key;
 
@@ -59,60 +61,61 @@ sub pluginmain {
 		return;
 	}
 	
-	$key_path = $ccs."\\Enum\\WpdBusEnumRoot";
+#	my $key_path = $ccs."\\Enum\\WpdBusEnumRoot";
+	my $key_path = $ccs."\\Enum\\SWD\\WPDBUSENUM";
+	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 
 		my @subkeys = $key->get_list_of_subkeys();
 		if (scalar(@subkeys) > 0) {
-			foreach my $s (@subkeys) {
-				my $dev_class = $s->get_name();
-				my @sk = $s->get_list_of_subkeys();
-				if (scalar(@sk) > 0) {
-					foreach my $k (@sk) {
-						my $serial = $k->get_name();
-						my ($dev,$sn) = (split(/#/,$k->get_name(),5))[3,4];
-						$sn =~ s/#$//;
-						::rptMsg($dev." (".$sn.")");
+			foreach my $k (@subkeys) {
+				my $dev_class = $k->get_name();
+				::rptMsg($dev_class);
+				
+				eval {
+					::rptMsg("  DeviceDesc: ".$k->get_value("DeviceDesc")->get_data());
+				};
 						
-						my $sn_lw = $k->get_timestamp();
-						::rptMsg("  LastWrite: ".gmtime($sn_lw));
+				eval {
+					::rptMsg("  Friendly: ".$k->get_value("FriendlyName")->get_data());
+				};
 						
-						eval {
-							::rptMsg("  DeviceDesc: ".$k->get_value("DeviceDesc")->get_data());
-						};
+				eval {
+					my $mfg = $k->get_value("Mfg")->get_data();
+					::rptMsg("  Mfg: ".$mfg) unless ($mfg eq "");
+				};
+					
 						
-						eval {
-							::rptMsg("  Friendly: ".$k->get_value("FriendlyName")->get_data());
-						};
+				eval {
+					::rptMsg("  Properties Key LastWrite: ".::getDateFromEpoch($k->get_subkey("Properties")->get_timestamp())."Z");
+				};
 						
-						eval {
-							my $mfg = $k->get_value("Mfg")->get_data();
-							::rptMsg("  Mfg: ".$mfg) unless ($mfg eq "");
-						};
-# added 20141015; updated 20141111						
-						eval {
-							::rptMsg("  Device Parameters LastWrite: [".gmtime($k->get_subkey("Device Parameters")->get_timestamp())."]");
-						};
-						eval {
-							::rptMsg("  LogConf LastWrite          : [".gmtime($k->get_subkey("LogConf")->get_timestamp())."]");
-						};
-						eval {
-							::rptMsg("  Properties LastWrite       : [".gmtime($k->get_subkey("Properties")->get_timestamp())."]");
-						};
-						eval {
-							my $t = $k->get_subkey("Properties\\{83da6326-97a6-4088-9453-a1923f573b29}\\00000064\\00000000")->get_value("Data")->get_data();
-							my ($t0,$t1) = unpack("VV",$t);
-							::rptMsg("  InstallDate     : ".gmtime(::getTime($t0,$t1))." UTC");
-							
-							$t = $k->get_subkey("Properties\\{83da6326-97a6-4088-9453-a1923f573b29}\\00000065\\00000000")->get_value("Data")->get_data();
-							($t0,$t1) = unpack("VV",$t);
-							::rptMsg("  FirstInstallDate: ".gmtime(::getTime($t0,$t1))." UTC");
-						};
+				my $t;
+				eval {
+					$t = $k->get_subkey("Properties\\{83da6326-97a6-4088-9453-a1923f573b29}\\0064")->get_value("")->get_data();
+					my ($t0,$t1) = unpack("VV",$t);
+					::rptMsg("    First InstallDate     : ".::getDateFromEpoch(::getTime($t0,$t1))."Z");
+				};
 						
+				eval {
+					$t = $k->get_subkey("Properties\\{83da6326-97a6-4088-9453-a1923f573b29}\\0065")->get_value("")->get_data();
+					my ($t0,$t1) = unpack("VV",$t);
+					::rptMsg("    InstallDate           : ".::getDateFromEpoch(::getTime($t0,$t1))."Z");
+				};
 						
-						::rptMsg("");
-					}
-				}
+				eval {
+						$t = $k->get_subkey("Properties\\{83da6326-97a6-4088-9453-a1923f573b29}\\0066")->get_value("")->get_data();
+					my ($t0,$t1) = unpack("VV",$t);
+					::rptMsg("    Last Arrival          : ".::getDateFromEpoch(::getTime($t0,$t1))."Z");
+				};
+						
+				eval {
+					$t = $k->get_subkey("Properties\\{83da6326-97a6-4088-9453-a1923f573b29}\\0067")->get_value("")->get_data();
+					my ($t0,$t1) = unpack("VV",$t);
+					::rptMsg("    Last Removal          : ".::getDateFromEpoch(::getTime($t0,$t1))."Z");
+				};
+						
+				::rptMsg("");
 			}
 		}
 		else {
@@ -128,7 +131,8 @@ sub pluginmain {
 # number of references to USBOblivion, a tool described as being able to wipe
 # out (all) indications of USB removable storage devices being connected to
 # the system.
-	$key_path = $ccs."\\Control\\DeviceClasses\\{10497b1b-ba51-44e5-8318-a65c837b6661}";
+	my $key_path = $ccs."\\Control\\DeviceClasses\\{10497b1b-ba51-44e5-8318-a65c837b6661}";
+	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
 		my @subkeys = $key->get_list_of_subkeys();
@@ -136,14 +140,13 @@ sub pluginmain {
 			foreach my $s (@subkeys) {
 				my $name = $s->get_name();
 				my $lw   = $s->get_timestamp();
-				
-				my (@n) = split(/#/,$name);
-				
-				if ($n[3] eq "WpdBusEnumRoot") { 
-					::rptMsg($n[8]."\\".$n[9]);
-					::rptMsg("LastWrite: ".gmtime($lw));
-					::rptMsg("");
-				}
+				::rptMsg($name);
+				::rptMsg("LastWrite: ".gmtime($lw)." UTC");
+				eval {
+					my $d = $s->get_value("DeviceInstance")->get_data();
+					::rptMsg("  DeviceInstance: ".$d);
+				};
+				::rptMsg("");
 			}
 		}
 		else {

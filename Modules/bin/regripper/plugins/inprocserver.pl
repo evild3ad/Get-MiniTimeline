@@ -3,6 +3,8 @@
 # 
 #
 # History
+#   20200427 - updated output date format; removed alert functionality
+#   20191211 - removed Lurk check
 #   20141126 - minor updates
 #   20141112 - added support for Wow6432Node
 #   20141103 - updated to include detection for PowerLiks
@@ -25,7 +27,7 @@
 #   http://www.secureworks.com/cyber-threat-intelligence/threats/malware-analysis-of-the-lurk-downloader/
 #   https://blog.gdatasoftware.com/blog/article/com-object-hijacking-the-discreet-way-of-persistence.html  
 #
-# copyright 2012-2014, QAR, LLC
+# copyright 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package inprocserver;
@@ -37,7 +39,7 @@ my %config = (hive          => "Software","NTUSER\.DAT","USRCLASS\.DAT",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20141126);
+              version       => 20200427);
 
 sub getConfig{return %config}
 
@@ -75,23 +77,7 @@ sub pluginmain {
 			if (scalar(@sk) > 0) {
 				foreach my $s (@sk) {
 					my $name = $s->get_name();
-					
-#Check for Lurk infection (see Dell SecureWorks ref link)					
-					if ($name eq "{A3CCEDF7-2DE2-11D0-86F4-00A0C913F750}" || $name eq "{a3ccedf7-2de2-11d0-86f4-00a0c913f750}") {
-						
-						my $l = $s->get_subkey("InprocServer32")->get_value("")->get_data();
-						$l =~ tr/[A-Z]/[a-z]/;
-						if ($l eq "c:\\windows\\system32\\pngfilt\.dll" || $l eq "c:\\windows\\syswow64\\pngfilt\.dll") {
-							::rptMsg("Possible Lurk infection found!");
-							::rptMsg("  ".$l);
-						}
-					}
-				
-					eval {
-						my $n = $s->get_subkey("InprocServer32")->get_value("")->get_data();
-						alertCheckPath($n);
-					};
-
+			
 # Powerliks
 # http://www.symantec.com/connect/blogs/trojanpoweliks-threat-inside-system-registry		
 # http://msdn.microsoft.com/en-us/library/windows/desktop/ms683844(v=vs.85).aspx			
@@ -114,23 +100,6 @@ sub pluginmain {
 		}
 		else {
 #			::rptMsg($key_path." not found.");
-		}
-	}
-}
-
-#-----------------------------------------------------------
-# alertCheckPath()
-#-----------------------------------------------------------
-sub alertCheckPath {
-	my $path = shift;
-	$path =~ tr/[A-Z]/[a-z]/;
-	
-	my @alerts = ("recycle","globalroot","temp","system volume information","appdata",
-	              "application data","programdata","c:\\users");
-	
-	foreach my $a (@alerts) {
-		if (grep(/$a/,$path)) {
-			::alertMsg("ALERT: inprocserver: ".$a." found in path: ".$path);              
 		}
 	}
 }

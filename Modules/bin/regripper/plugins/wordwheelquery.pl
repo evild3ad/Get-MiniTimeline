@@ -3,6 +3,8 @@
 # For Windows 7
 #
 # Change history
+#   20200823 - fixed multibyte character corruption
+#   20200526 - updated date output format
 #	  20100330 - created
 #
 # References
@@ -12,13 +14,14 @@
 #-----------------------------------------------------------
 package wordwheelquery;
 use strict;
+use Encode::Unicode;
 
 my %config = (hive          => "NTUSER\.DAT",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20100330);
+              version       => 20200823);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -44,7 +47,7 @@ sub pluginmain {
 	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		my @vals = $key->get_list_of_values();
 		if (scalar(@vals) > 0) {
 			my @list;
@@ -57,7 +60,9 @@ sub pluginmain {
 				}
 				else {
 					my $data = $v->get_data();
-					$data =~ s/\x00//g;
+					Encode::from_to($data,'UTF-16LE','utf8');
+					$data = Encode::decode_utf8($data);
+					chop $data;
 					$wwq{$name} = $data;
 				}
 			}

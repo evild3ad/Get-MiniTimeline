@@ -3,12 +3,13 @@
 # 
 #
 # History:
+#  20200515 - minor updates
 #  20190223 - created
 #
 # References:
 #  https://support.microsoft.com/en-us/help/154501/how-to-disable-automatic-machine-account-password-changes
 # 
-# copyright 2019 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package netlogon;
@@ -17,12 +18,12 @@ use strict;
 my %config = (hive          => "System",
 							hivemask      => 4,
 							output        => "report",
-							category      => "System Config",
+							category      => "config",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 31,  
-              version       => 20190223);
+              version       => 20200515);
 
 sub getConfig{return %config}
 sub getShortDescr {

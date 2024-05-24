@@ -4,12 +4,13 @@
 #  for use with mixer.pl/mixer_tln.pl plugins
 #
 # Change history:
+#  20200525 - minor updates
 #  20141112 - created
 # 
 # Ref:
 #  http://www.ghettoforensics.com/2014/11/dj-forensics-analysis-of-sound-mixer.html
 #
-# copyright 2014 QAR,LLC 
+# copyright 2020 QAR,LLC 
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package audiodev;
@@ -21,7 +22,7 @@ my %config = (hive          => "Software",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20141112);
+              version       => 20200525);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -40,7 +41,7 @@ my $VERSION = getVersion();
 sub pluginmain {
 	my $class = shift;
 	my $hive = shift;
-	::rptMsg("Launching audiodev v.".$VERSION);
+	::logMsg("Launching audiodev v.".$VERSION);
 	::rptMsg("audiodev v.".$VERSION); 
 	::rptMsg("(".$config{hive}.") ".getShortDescr()."\n"); 
 	my $key_path = 'Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio';
@@ -84,11 +85,5 @@ sub pluginmain {
 	else {
 		::rptMsg("Could not get root key\.");
 	}
-	
-	
-	
-	
-	
-	
 }
 1;

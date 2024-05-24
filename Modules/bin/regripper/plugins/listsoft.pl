@@ -1,4 +1,4 @@
-#! c:\perl\bin\perl.exe
+
 #-----------------------------------------------------------
 # listsoft.pl
 # Plugin for Registry Ripper; traverses thru the Software
@@ -6,9 +6,11 @@
 # and listing them in order by LastWrite time.
 #
 # Change history
+#   20200517 - updated date output format
+#   20080324 - created
 # 
-# 
-# copyright 2008 H. Carvey
+# copyright 2020 Quantum Analytics Research, LLC
+# author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package listsoft;
 use strict;
@@ -18,7 +20,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20080324);
+              version       => 20200517);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -43,7 +45,6 @@ sub pluginmain {
 	my $key_path = 'Software';
 	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
-		::rptMsg("listsoft v.".$VERSION);
 		::rptMsg("List the contents of the Software key in the NTUSER\.DAT hive");
 		::rptMsg("file, in order by LastWrite time.");
 		::rptMsg("");
@@ -55,16 +56,16 @@ sub pluginmain {
 			
 			foreach my $t (reverse sort {$a <=> $b} keys %soft) {
 				foreach my $item (@{$soft{$t}}) {
-					::rptMsg(gmtime($t)."Z \t".$item);
+					::rptMsg(::getDateFromEpoch($t)."Z \t".$item);
 				}
 			}	
 		}
 		else {
-			::logMsg($key_path." has no subkeys.");
+			::rptMsg($key_path." has no subkeys.");
 		}
 	}
 	else {
-		::logMsg("Could not access ".$key_path);
+		::rptMsg("Could not access ".$key_path);
 	}
 }
 

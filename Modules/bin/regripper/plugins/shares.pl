@@ -4,6 +4,7 @@
 # Retrieve information about shares from a System hive file
 #
 # History
+#  20200525 - minor updates
 #  20140730 - added collection of NullSessionShares
 #  20090112 - created
 #
@@ -12,7 +13,7 @@
 #   For info about share types, see the Win32_Share  WMI class:
 #      http://msdn.microsoft.com/en-us/library/aa394435(VS.85).aspx
 #
-# copyright 2014 QAR, LLC
+# copyright 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package shares;
@@ -20,10 +21,11 @@ use strict;
 
 my %config = (hive          => "System",
               osmask        => 22,
+              category      => "config",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20140730);
+              version       => 20200525);
 
 sub getConfig{return %config}
 
@@ -97,7 +99,7 @@ sub pluginmain {
 
 # Determine of the AutoShareServer/Wks values have been set
 	my $path = $key_path."\\".$lanman;
-	$tag  = "parameters";
+	my $tag  = "parameters";
 	my $para = getKeyPath($path,$tag);
 	eval {
 		if ($key = $root_key->get_subkey($path."\\".$para)) {

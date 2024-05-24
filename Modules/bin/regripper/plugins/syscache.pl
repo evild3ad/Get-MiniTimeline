@@ -2,12 +2,13 @@
 # syscache.pl 
 #   
 # Change history
+#   20200515 - updated date output format
 #   20181209 - created
 #
 # References
 #   https://github.com/libyal/winreg-kb/blob/master/documentation/SysCache.asciidoc
 #
-# Copyright (c) 2018 QAR, LLC
+# Copyright 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package syscache;
@@ -19,7 +20,7 @@ my %config = (hive          => "syscache",
               hasRefs       => 0,
               osmask        => 22,
               category      => "program execution",
-              version       => 20181209);
+              version       => 20200515);
 my $VERSION = getVersion();
 
 # Functions #
@@ -62,7 +63,7 @@ sub processKey {
 	my $key = shift;
 	
 	my $lw = $key->get_timestamp();
-	::rptMsg("LastWrite: ".gmtime($lw)." Z");
+	::rptMsg("LastWrite: ".::getDateFromEpoch($lw)."Z");
 	
 	eval {
 		my ($f1,$f2,$seq) = unpack("Vvv",$key->get_value("_FileId_")->get_data());
@@ -83,7 +84,7 @@ sub processKey {
 	eval {
 		my ($u1,$u2) = unpack("VV",$key->get_value("_UsnJournalId_")->get_data());
 		my $usn = ::getTime($u1,$u2);
-		::rptMsg("  USN Journal ID = ".gmtime($usn)." Z");
+		::rptMsg("  USN Journal ID = ".::getDateFromEpoch($usn)."Z");
 		
 	};
 

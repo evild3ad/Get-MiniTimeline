@@ -1,8 +1,12 @@
 #-----------------------------------------------------------
 # schedagent
-# Get contents of SchedulingAgent key from Software hive
+# Get contents of SchedulingAgent key from Software hive 
 #
-# copyright 2010 Quantum Analytics Research, LLC
+# History
+#   20200518 - updated date output format
+#   20100817 - created
+#
+# copyright 2020 Quantum Analytics Research, LLC
 #-----------------------------------------------------------
 package schedagent;
 use strict;
@@ -12,7 +16,7 @@ my %config = (hive          => "Software",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 1,
-              version       => 20100817);
+              version       =>  20200518);
 
 sub getConfig{return %config}
 
@@ -39,7 +43,7 @@ sub pluginmain {
 	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 		
 		my ($oldname,$logpath,$folder,$lastrun,$size);

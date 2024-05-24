@@ -52,74 +52,62 @@ sub pluginmain {
 	my $class = shift;
 	my $ntuser = shift;
 	::logMsg("Launching oisc v.".$VERSION);
-	::rptMsg("oisc v.".$VERSION); # banner
-    ::rptMsg("(".getHive().") ".getShortDescr()."\n"); # banner
+	::rptMsg("oisc v.".$VERSION); 
+  ::rptMsg("(".getHive().") ".getShortDescr()."\n"); 
 	my $reg = Parse::Win32Registry->new($ntuser);
 	my $root_key = $reg->get_root_key;
 # First, let's find out which version of Office is installed
-	my $version;
-	my $tag = 0;
-	my @versions = ("7\.0","8\.0", "9\.0", "10\.0", "11\.0","12\.0");
-	foreach my $ver (@versions) {
-		my $key_path = "Software\\Microsoft\\Office\\".$ver."\\Common\\Internet\\Server Cache";
-		if (defined($root_key->get_subkey($key_path))) {
-			$version = $ver;
-			$tag = 1;
+	my @version = ();
+	my $office_version = ();
+	my $key = ();
+	
+	my $key_path = "Software\\Microsoft\\Office";
+	if ($key = $root_key->get_subkey($key_path)) {
+		my @subkeys = $key->get_list_of_subkeys();
+		foreach my $s (@subkeys) {
+			my $name = $s->get_name();
+			push(@version,$name) if ($name =~ m/^\d/);
 		}
 	}
-	
-	if ($tag) {
-		
-		my %isc;
-		
-		::rptMsg("MSOffice version ".$version." located.");
-		my $key_path = "Software\\Microsoft\\Office\\".$version."\\Common\\Internet\\Server Cache";			
-		my $sc_key;
-		if ($sc_key = $root_key->get_subkey($key_path)) {
-# Attempt to retrieve Servers Cache subkeys
-			my @sc = ($sc_key->get_list_of_subkeys());
-			if (scalar(@sc) > 0) {
-				foreach my $s (@sc) {
-					my $name = $s->get_name();
-					$isc{$name}{lastwrite} = $s->get_timestamp();
-					
-					eval {
-						my $t = $s->get_value("Type")->get_data();
-						(exists $types{$t}) ? ($isc{$name}{type} = $types{$t})
-						                    : ($isc{$name}{type} = $t);
-					};
-					
-					eval {
-						my $p = $s->get_value("Protocol")->get_data();
-						(exists $prot{$p}) ? ($isc{$name}{protocol} = $prot{$p}) 
-						                   : ($isc{$name}{protocol} = $p);
-					};
-					
-					eval {
-						my @e = unpack("VV",$s->get_value("Expiration")->get_data());
-						$isc{$name}{expiry} = ::getTime($e[0],$e[1]);
-					};
-				}
-				::rptMsg("");
-				foreach my $i (keys %isc) {
-					::rptMsg($i);
-					::rptMsg("  LastWrite : ".gmtime($isc{$i}{lastwrite})." UTC");
-					::rptMsg("  Expiry    : ".gmtime($isc{$i}{expiry})." UTC");
-					::rptMsg("  Protocol  : ".$isc{$i}{protocol});
-					::rptMsg("  Type      : ".$isc{$i}{type});
-					::rptMsg("");
-				}
+# Determine MSOffice version in use	
+	my @v = reverse sort {$a<=>$b} @version;
+	foreach my $i (@v) {
+		eval {
+			if (my $o = $key->get_subkey($i."\\User Settings")) {
+				$office_version = $i;
 			}
-			else {
-				::rptMsg($key_path." has no subkeys.");
+		};
+	}
+	::rptMsg("Office Version: ".$office_version);
+	
+	if ($key = $root_key->get_subkey($key_path."\\".$office_version."\\Common\\Internet\\Server Cache")) {
+# Attempt to retrieve Servers Cache subkeys
+		my @subkeys = ($key->get_list_of_subkeys());
+		if (scalar(@subkeys) > 0) {
+			foreach my $s (@subkeys) {
+				::rptMsg($s->get_name());
+				::rptMsg("LastWrite time: ".::getDateFromEpoch($s->get_timestamp())."Z");
+				
+				eval {
+					my $expiry = $s->get_value("Expiration")->get_data();
+					my ($t0,$t1) = unpack("VV",$expiry);
+					::rptMsg("Expiration    : ".::getDateFromEpoch(::getTime($t0,$t1))."Z");
+				};
+				
+				eval {
+					my $web = $s->get_value("WebURL")->get_data();
+					::rptMsg("WebURL: ".$web) if ($web ne "");
+				};
+
+				::rptMsg("");
 			}
 		}
 		else {
-			::rptMsg($key_path." not found.");
+			::rptMsg($key_path."\\".$office_version."\\Common\\Internet\\Server Cache has no subkeys.");
 		}
 	}
 	else {
-		::rptMsg("MSOffice version not found.");
+		::rptMsg($key_path."\\".$office_version."\\Common\\Internet\\Server Cache not found.");
 	}
 }
 1;

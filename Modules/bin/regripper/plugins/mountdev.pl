@@ -4,6 +4,7 @@
 # MountedDevices
 # 
 # Change history
+#  20200517 - updated date output format
 #  20130530 - updated to output Disk Signature in correct format, thanks to
 #             info provided by Tom Yarrish (see ref.)
 #  20080324 - created
@@ -11,7 +12,7 @@
 # References
 #  http://blogs.technet.com/b/markrussinovich/archive/2011/11/08/3463572.aspx
 # 
-# copyright 2013 QAR, LLC
+# copyright 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package mountdev;
@@ -22,7 +23,7 @@ my %config = (hive          => "System",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20130530);
+              version       => 20200517);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -49,7 +50,7 @@ sub pluginmain {
 	my %md;
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite time = ".gmtime($key->get_timestamp())."Z");
+		::rptMsg("LastWrite time = ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 		my @vals = $key->get_list_of_values();
 		if (scalar(@vals) > 0) {
@@ -63,7 +64,7 @@ sub pluginmain {
 					
 				}
 				elsif ($len > 12) {
-					$data =~ s/\x00//g;
+					$data =~ s/\00//g;
 					push(@{$md{$data}},$v->get_name());
 				}
 				else {
@@ -73,7 +74,12 @@ sub pluginmain {
 			
 			::rptMsg("");
 			foreach my $m (keys %md) {
-				::rptMsg("Device: ".$m);
+				if ($m =~ /^DMIO:ID:/){
+					::rptMsg("Device: DMIO:ID:"._translateBinary(substr($m,8)));
+				}
+				else {
+					::rptMsg("Device: ".$m);
+				}
 				foreach my $item (@{$md{$m}}) {
 					::rptMsg("  ".$item);
 				}

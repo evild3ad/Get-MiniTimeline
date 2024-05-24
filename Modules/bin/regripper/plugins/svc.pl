@@ -5,6 +5,7 @@
 # of service.pl plugin); outputs info in .csv format
 # 
 # Change history
+#   20200525 - updated date output format, removed alertMsg() functionality
 #   20131010 - added BackDoor.Kopdel checks
 #   20130911 - rewrite; fixed issue with running in rip.exe, removed
 #              some of the more noisy alerts; added check for FailureActions
@@ -23,7 +24,7 @@
 # Note: some checks/alerts borrowed from E. Schweinsberg's svc_plus.pl 
 #       (bethlogic@gmail.com)
 #
-# copyright 2013 QAR, LLC
+# copyright 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package svc;
@@ -34,7 +35,7 @@ my %config = (hive          => "System",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20131010);
+              version       => 20200525);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -119,24 +120,12 @@ sub pluginmain {
 					
 					eval {
 						$image = $s->get_value("ImagePath")->get_data();
-#						if (($type == 0x01 || $type == 0x02) && ($image ne "")) {
-#							::alertMsg("ALERT: svc: ".$name." Driver does not end in \.sys\.") unless ($image =~ m/\.sys$/);
-#						}
-#						alertCheckPath($image);
-#						alertCheckADS($image);
 					};
 					$image = "" if ($@);
 					
 					eval {
 						$descr = $s->get_value("Description")->get_data();
 					};
-					
-# added 20130911
-# ref: http://technet.microsoft.com/en-us/library/cc742019.aspx
-					eval {
-						my $fa = $s->get_value("FailureAction")->get_data();
-						::alertMsg("ALERT: Service ".$name." has FailureAction value: ".$fa);
-					};					
 					
 					my $st = "";
 					eval {
@@ -147,22 +136,6 @@ sub pluginmain {
 						$start = "";
 						$st    = "";
 					}
-
-# added 20131010 - Backdoor.Kopdel check				
-					eval {
-						my $ep = $s->get_value("ErrorPointer")->get_data();
-						::alertMsg("Alert: svc: ".$name." has ErrorPointer value: ".$ep);
-					};
-# added 20131010 - Backdoor.Kopdel check
-					eval {
-						my $eh = $s->get_value("ErrorHandle")->get_data();
-						::alertMsg("Alert: svc: ".$name." has ErrorHandle value: ".$eh);
-					};
-# WOW64 check added 20131108
-					eval {
-						my $w = $s->get_value("WOW64")->get_data();
-						::alertMsg("Alert: svc: ".$name." has a WOW64 value: ".$w);
-					};					
 
 					eval {
 						$object = $s->get_value("ObjectName")->get_data();
@@ -175,12 +148,6 @@ sub pluginmain {
 					eval {
 						$para = $s->get_subkey("Parameters");
 						$dll = $para->get_value("ServiceDll")->get_data();
-						
-						::alertMsg("ALERT: svc: ".$name." ServiceDll does not end in \.dll\.") unless ($dll =~ m/\.dll$/);
-						
-						alertCheckPath($dll);
-						alertCheckADS($dll);
-						
 						my $str = $name."\\Parameters\|\|".$dll."\|\|\|";
 						push(@{$svcs{$para->get_timestamp()}},$str);
 					};
@@ -191,7 +158,7 @@ sub pluginmain {
 					foreach my $item (@{$svcs{$t}}) {
 						my ($n,$d,$i,$t2,$s,$o,$d2) = split(/\|/,$item,7);
 #						::rptMsg($t.",".$n.",".$d.",".$i.",".$t2.",".$s.",".$o);
-						::rptMsg(gmtime($t)." Z,".$n.",".$d.",".$i.",".$t2.",".$s.",".$o.",".$d2);
+						::rptMsg(::getDateFromEpoch($t)."Z,".$n.",".$d.",".$i.",".$t2.",".$s.",".$o.",".$d2);
 					}
 				}
 			}
@@ -208,31 +175,4 @@ sub pluginmain {
 	}
 }
 
-
-#-----------------------------------------------------------
-# alertCheckPath()
-#-----------------------------------------------------------
-sub alertCheckPath {
-	my $path = shift;
-	my $lcpath = $path;
-	$lcpath =~ tr/[A-Z]/[a-z]/;
-	my @alerts = ("recycle","globalroot","temp","system volume information","appdata",
-	              "application data");
-	
-	foreach my $a (@alerts) {
-		if (grep(/$a/,$lcpath)) {
-			::alertMsg("ALERT: svc: ".$a." found in path: ".$path);              
-		}
-	}
-}
-
-#-----------------------------------------------------------
-# alertCheckADS()
-#-----------------------------------------------------------
-sub alertCheckADS {
-	my $path = shift;
-	my @list = split(/\\/,$path);
-	my $last = $list[scalar(@list) - 1];
-#	::alertMsg("ALERT: svc: Poss. ADS found in path: ".$path) if grep(/:/,$last);
-}
 1;

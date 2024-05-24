@@ -3,12 +3,14 @@
 # Determine the RDP Port used
 #
 # History
+#  20200526 - minor updates
 #  20100713 - created
 #
 # References
 #   http://support.microsoft.com/kb/306759
 #
-# copyright 2010 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
+# author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package rdpport;
 use strict;
@@ -17,7 +19,7 @@ my %config = (hive          => "System",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20100713);
+              version       => 20200526);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -44,8 +46,6 @@ sub pluginmain {
 	my $ccs = $root_key->get_subkey("Select")->get_value("Current")->get_data();
 	my $key_path = "ControlSet00".$ccs."\\Control\\Terminal Server\\WinStations\\RDP-Tcp";
 	if ($key = $root_key->get_subkey($key_path)) {
-		::rptMsg("rdpport v.".$VERSION);
-		::rptMsg("");
 		my $port;
 		eval {
 			$port = $key->get_value("PortNumber")->get_data();

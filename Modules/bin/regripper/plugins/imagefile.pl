@@ -6,15 +6,19 @@
 #  CWDIllegalInDllSearch: http://support.microsoft.com/kb/2264107
 #  http://carnal0wnage.attackresearch.com/2012/04/privilege-escalation-via-sticky-keys.html
 #  'Auto' value - https://docs.microsoft.com/en-us/windows/desktop/debug/configuring-automatic-debugging
+#  https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/dn408187(v=ws.11)
 #
 # Change history:
+#  20200515 - updated date output format
+#  20190829 - added check for AuditLevel value
 #  20190511 - added search for 'auto' value
 #  20131007 - added Carnal0wnage reference
 #  20130425 - added alertMsg() functionality
 #  20130410 - added Wow6432Node support
 #  20100824 - added check for "CWDIllegalInDllSearch" value
 #
-# copyright 2013 Quantum Analytics Research, LLC
+# copyright 2019-2020 Quantum Analytics Research, LLC
+# Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package imagefile;
 use strict;
@@ -24,12 +28,12 @@ my %config = (hive          => "Software",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              category      => "malware",
-              version       => 20190511);
+              category      => "persistence",
+              version       => 20200515);
 
 sub getConfig{return %config}
 sub getShortDescr {
-	return "Checks IFEO subkeys for Debugger & CWDIllegalInDllSearch values";	
+	return "Checks ImageFileExecutionOptions subkeys values";	
 }
 sub getDescr{}
 sub getRefs {}
@@ -82,9 +86,11 @@ sub pluginmain {
 					eval {
 						$debug{$name}{auto} = $s->get_value("Auto")->get_data();
 					};
+# 20190829 - added check for AuditLevel value
+					eval {
+						$debug{$name}{auditlevel} = $s->get_value("AuditLevel")->get_data();
+					};
 		
-# If the eval{} throws an error, it's b/c the Debugger value isn't
-# found within the key, so we don't need to do anything w/ the error
 					if ($dllsearch ne "") {
 						$debug{$name}{dllsearch} = sprintf "0x%x",$dllsearch;
 						$debug{$name}{lastwrite} = $s->get_timestamp();
@@ -93,11 +99,11 @@ sub pluginmain {
 			
 				if (scalar (keys %debug) > 0) {
 					foreach my $d (keys %debug) {
-						::rptMsg($d."  LastWrite: ".gmtime($debug{$d}{lastwrite}));
+						::rptMsg($d."  LastWrite: ".::getDateFromEpoch($debug{$d}{lastwrite})."Z");
 						::rptMsg("  Debugger             : ".$debug{$d}{debug}) if (exists $debug{$d}{debug});
-						::rptMsg("  Auto                 : ".$debug{$d}{auto} if (exists $debug{$d}{auto});
-						::alertMsg("Alert: imagefile: Debugger value found : ".$debug{$d}{debug}) if (exists $debug{$d}{debug});
+						::rptMsg("  Auto                 : ".$debug{$d}{auto}) if (exists $debug{$d}{auto});
 						::rptMsg("  CWDIllegalInDllSearch: ".$debug{$d}{dllsearch}) if (exists $debug{$d}{dllsearch});
+						::rptMsg("  AuditLevel           : ".$debug{$d}{auditlevel}) if (exists $debug{$d}{auditlevel});
 					}
 				}
 				else {

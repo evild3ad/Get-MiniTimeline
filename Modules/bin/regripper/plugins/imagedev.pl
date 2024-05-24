@@ -76,8 +76,6 @@ sub pluginmain {
 					$desc = $s->get_value("DeviceDesc")->get_data();
 					::rptMsg("  ".$desc);
 				};
-				
-				
 			}
 		}
 		else {

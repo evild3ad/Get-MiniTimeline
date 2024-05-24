@@ -3,10 +3,12 @@
 # Get WinRAR\ArcHistory entries
 #
 # History
+#   20200526 - updated date output format
 #   20080819 - created
 #
 #
-# copyright 2008 H. Carvey, keydet89@yahoo.com
+# copyright 2020 Quantum Analytics Research, LLC
+# author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package winrar;
 use strict;
@@ -16,7 +18,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20080819);
+              version       => 20200526);
 
 sub getConfig{return %config}
 
@@ -44,7 +46,7 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg("WinRAR");
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 		
 		my %arc;
@@ -65,8 +67,6 @@ sub pluginmain {
 	}
 	else {
 		::rptMsg($key_path." not found.");
-		::logMsg($key_path." not found.");
 	}
-	
 }
 1;

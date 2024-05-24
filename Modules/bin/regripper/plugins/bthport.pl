@@ -5,13 +5,13 @@
 # other locations)
 # 
 # Change history
+#   20200517 - updated date output format
 #   20180705 - updated to support Win10, per data provided by Micah Jones
 #   20170129 - added support for http://www.hexacorn.com/blog/2017/01/29/beyond-good-ol-run-key-part-59/
 #   20130115 - created
 #
-# Category:
 # 
-# copyright 2018 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package bthport;
@@ -22,7 +22,8 @@ my %config = (hive          => "System",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20180705);
+              category      => "devices",
+              version       => 20200517);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -56,7 +57,7 @@ sub pluginmain {
 		my $cn;
 		if ($cn = $root_key->get_subkey($cn_path)) {
 			::rptMsg($cn_path);
-			::rptMsg("LastWrite: ".gmtime($cn->get_timestamp())." UTC");
+			::rptMsg("LastWrite: ".::getDateFromEpoch($cn->get_timestamp())."Z");
 			
 			my @sk = $cn->get_list_of_subkeys();
 			if (scalar(@sk) > 0) {
@@ -74,12 +75,12 @@ sub pluginmain {
 					
 					eval {
 						my ($t0,$t1) = unpack("VV",$s->get_value("LastSeen")->get_data());
-						::rptMsg("LastSeen        : ".gmtime(::getTime($t0,$t1))." Z");
+						::rptMsg("LastSeen        : ".::getDateFromEpoch(::getTime($t0,$t1))."Z");
 					};
 					
 					eval {
 						my ($t0,$t1) = unpack("VV",$s->get_value("LastConnected")->get_data());
-						::rptMsg("LastConnected   : ".gmtime(::getTime($t0,$t1))." Z");
+						::rptMsg("LastConnected   : ".::getDateFromEpoch(::getTime($t0,$t1))."Z");
 					};
 					
 					::rptMsg("");
@@ -97,7 +98,7 @@ sub pluginmain {
 		my $rs;
 		if ($rs = $root_key->get_subkey($rs_path)) {
 			::rptMsg($rs_path);
-			::rptMsg("LastWrite: ".gmtime($rs->get_timestamp())." UTC");
+			::rptMsg("LastWrite: ".::getDateFromEpoch($rs->get_timestamp())."Z");
 			
 			eval {
 				my $spt = $rs->get_value("SupportDLL")->get_data();

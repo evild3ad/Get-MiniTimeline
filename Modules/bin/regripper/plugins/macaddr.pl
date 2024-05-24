@@ -5,10 +5,11 @@
 # code
 # 
 # History:
+#  20200515 - updated date output format
 #  20190506 - updated
 #  20090118 - created
 #
-# copyright 2019, QAR, LLC
+# copyright 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package macaddr;
@@ -19,7 +20,7 @@ my %config = (hive          => "System,Software",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20190506);
+              version       => 20200515);
 
 sub getConfig{return %config}
 
@@ -65,7 +66,7 @@ sub pluginmain {
 						eval {
 							$na = $key->get_subkey($name)->get_value("NetworkAddress")->get_data();
 							::rptMsg("  ".$name.": NetworkAddress = ".$na);
-							::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+							::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 							$found = 1;
 						};	
 					}

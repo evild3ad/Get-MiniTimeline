@@ -1,4 +1,4 @@
-#! c:\perl\bin\perl.exe
+
 #-----------------------------------------------------------
 # findexes.pl
 # Plugin for RegRipper; traverses through a Registry hive,
@@ -7,9 +7,11 @@
 # LastWrite time, and length of the data
 #
 # Change history
+#    20200525 - updated date output format
 #    20090728 - Created
 # 
-# copyright 2009 H. Carvey
+# copyright 2020 Quantum Analytics Research, LLC
+# author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package findexes;
 use strict;
@@ -19,7 +21,7 @@ my %config = (hive          => "All",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20090728);
+              version       => 20200525);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -47,7 +49,7 @@ sub pluginmain {
 	traverse($root_key);
 # Data structure containing findings is a hash of hashes	
 	foreach my $k (keys %vals) {
-		::rptMsg("Key: ".$k."   LastWrite time: ".gmtime($vals{$k}{lastwrite}));
+		::rptMsg("Key: ".$k."   LastWrite time: ".::getDateFromEpoch($vals{$k}{lastwrite})."Z");
 		foreach my $i (keys %{$vals{$k}}) {
 			next if ($i eq "lastwrite");
 			::rptMsg("  Value: ".$i."  Length: ".$vals{$k}{$i}." bytes");

@@ -2,13 +2,15 @@
 # source_os.pl
 #
 # History:
+#  20200511 - update date output format
+#  20190829 - added check for CmdLine value
 #  20180629 - created
 #
 # References:
 #  http://az4n6.blogspot.com/2017/02/when-windows-lies.html
 # 
 # 
-# copyright 2018 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package source_os;
@@ -17,12 +19,12 @@ use strict;
 my %config = (hive          => "System",
 							hivemask      => 4,
 							output        => "report",
-							category      => "Program Execution",
+							category      => "configuration",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              osmask        => 31,  #XP - Win7
-              version       => 20180629);
+              osmask        => 31,  
+              version       => 20200511);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -49,6 +51,15 @@ sub pluginmain {
 	my $key_path = 'Setup';
 	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
+# https://eddiejackson.net/wp/?p=15847		
+		eval {
+			my $cmd = $key->get_value("CmdLine")->get_data();	
+			if ($cmd ne "") {
+				::rptMsg("SetupType: ".$key->get_value("SetupType")->get_data());
+				::rptMsg($key_path."\\CmdLine value = ".$cmd);
+			}
+		};
+		
 		my @sk = $key->get_list_of_subkeys();
 		foreach my $s (@sk) {
 			my $name = $s->get_name();
@@ -57,12 +68,12 @@ sub pluginmain {
 				my $id = $s->get_value("InstallDate")->get_data();
 				
 				::rptMsg($name);
-				::rptMsg("  InstallDate: ".gmtime($id)." Z");
+				::rptMsg("  InstallDate: ".::getDateFromEpoch($id)."Z");
 				
 				eval {
 					my ($t0,$t1) = unpack("VV",$s->get_value("InstallTime")->get_data());
 					my $t = ::getTime($t0,$t1);
-					::rptMsg("  InstallTime: ".gmtime($t)." Z");
+					::rptMsg("  InstallTime: ".::getDateFromEpoch($t)." Z");
 				};
 				
 				eval {

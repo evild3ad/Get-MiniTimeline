@@ -1,4 +1,4 @@
-#! c:\perl\bin\perl.exe
+
 #-----------------------------------------------------------
 # muicache_tln.pl
 # Plugin for Registry Ripper, NTUSER.DAT edition - gets the 
@@ -36,7 +36,7 @@ my $VERSION = getVersion();
 sub pluginmain {
 	my $class = shift;
 	my $ntuser = shift;
-	::logMsg("Launching muicache_tln v.".$VERSION);
+#	::logMsg("Launching muicache_tln v.".$VERSION);
 	my $reg = Parse::Win32Registry->new($ntuser);
 	my $root_key = $reg->get_root_key;
 	my $key_path = 'Software\\Microsoft\\Windows\\ShellNoRoam\\MUICache';
@@ -64,7 +64,8 @@ sub pluginmain {
 #		::rptMsg("");
 	}
 # Added for access to USRCLASS.DAT
-	$key_path = 'Local Settings\\Software\\Microsoft\\Windows\\Shell\\MUICache';
+	my $key_path = 'Local Settings\\Software\\Microsoft\\Windows\\Shell\\MUICache';
+	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 #		::rptMsg($key_path);
 #		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");

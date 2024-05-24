@@ -3,9 +3,10 @@
 #
 #
 # History:
+#  20200526 - updated date output format
 #  20130117 - created
 #
-# copyright 2013 Quantum Research Analytics, LLC
+# copyright 2020 Quantum Research Analytics, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package btconfig;
@@ -16,7 +17,7 @@ my %config = (hive          => "Software",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20130117);
+              version       => 20200526);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -50,7 +51,7 @@ sub pluginmain {
 			my $lw   = $s->get_timestamp();
 			
 			::rptMsg("Unique ID: ".$name);
-			::rptMsg("  LastWrite: ".gmtime($lw)." Z");
+			::rptMsg("  LastWrite: ".::getDateFromEpoch($lw)."Z");
 			
 			my $devname;
 			eval {

@@ -3,6 +3,7 @@
 #
 #
 # History:
+#  20200511 - updated date output format
 #  20120509 - created
 #
 # References:
@@ -21,7 +22,7 @@ my %config = (hive          => "Software",
               hasDescr      => 0,
               hasRefs       => 1,
               osmask        => 22,
-              version       => 20120509);
+              version       => 20200511);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -53,7 +54,7 @@ sub pluginmain {
 				next if (scalar(@subkeys) == 1);
 		    foreach my $s (@subkeys) {
 			  	my $lw = $s->get_timestamp();
-			  	my $t = gmtime($lw);
+			  	my $t = ::getDateFromEpoch($lw)."Z";
 			  	my $name = $s->get_name();
 			  	::rptMsg(sprintf "%-25s  %-50s",$t,$name);
 				}

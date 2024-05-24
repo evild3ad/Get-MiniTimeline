@@ -1,8 +1,11 @@
 #-----------------------------------------------------------
 # termserv.pl
-# Plugin for Registry Ripper; 
+# Get values related to Terminal Server/Services, from System or Software hive 
 # 
 # Change history
+#   20200506 - updated date output format
+#   20200318 - added check for port number
+#   20190925 - added fSingleSessionPerUser check
 #   20190527 - Added checks in Software hive
 #   20160224 - added SysProcs info
 #   20131007 - updated with Sticky Keys info
@@ -23,7 +26,8 @@
 #   TSEnabled value - http://support.microsoft.com/kb/222992
 #   TSUserEnabled value - http://support.microsoft.com/kb/238965
 #   
-# copyright 2010 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
+# Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package termserv;
 use strict;
@@ -33,7 +37,7 @@ my %config = (hive          => "System, Software",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20190527);
+              version       => 20200506);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -65,7 +69,7 @@ sub pluginmain {
 		my $ts;
 		if ($ts = $root_key->get_subkey($ts_path)) {
 			::rptMsg($ts_path);
-			::rptMsg("LastWrite Time ".gmtime($ts->get_timestamp())." (UTC)");
+			::rptMsg("LastWrite Time ".::getDateFromEpoch($ts->get_timestamp())."Z");
 			::rptMsg("");
 			
 			my $ver;
@@ -124,12 +128,20 @@ sub pluginmain {
 			my $help;
 			eval {
 				$help = $ts->get_value("fAllowToGetHelp")->get_data();
-				::rptMsg("  fAllowToGetHelp = ".$user);
-				::rptMsg("  1 = Users can request assistance from friend or a ");
-				::rptMsg("  support professional.");
+				::rptMsg("  fAllowToGetHelp = ".$help);
+				::rptMsg("  1 = Users can request assistance from friend or a support professional.");
 				::rptMsg("  Ref: http://www.pctools.com/guides/registry/detail/1213/");
 			};
-			
+# Added 20190925
+# fSingleSessionPerUser
+# 
+		my $single;
+			eval {
+				$single = $ts->get_value("fSingleSessionPerUser")->get_data();
+				::rptMsg("  fSingleSessionPerUser = ".$single);
+				::rptMsg("");
+			};
+
 			::rptMsg("AutoStart Locations");
 			eval {
 				my $start = $ts->get_subkey("Wds\\rdpwd")->get_value("StartupPrograms")->get_data();
@@ -164,7 +176,7 @@ sub pluginmain {
 				my @vals = $sys->get_list_of_values();
 				if ((scalar @vals) > 0) {
 					::rptMsg("SysProcs key values");
-					::rptMsg("LastWrite: ".gmtime($sys->get_timestamp())." Z");
+					::rptMsg("LastWrite: ".::getDateFromEpoch($sys->get_timestamp())."Z");
 					foreach my $v (@vals) {
 						::rptMsg("  ".$v->get_name()." - ".$v->get_data());
 					}
@@ -183,7 +195,16 @@ sub pluginmain {
 				::rptMsg("http://www.room362.com/blog/2012/5/25/sticky-keys-and-utilman-against-nla.html");
 			};
 			::rptMsg("UserAuthentication value not found\.") if ($@);
-	
+
+# Added 20200318
+			eval {
+				::rptMsg("");
+				my $ua = $ts->get_subkey("WinStations\\RDP-Tcp")->get_value("PortNumber")->get_data();
+				::rptMsg("WinStations\\RDP-Tcp key");
+				::rptMsg("  PortNumber: ".$ua);
+				::rptMsg("Analysis Tip: By default, the port number is 3389, but can be changed.");
+			};
+
 		}
 		else {
 			::rptMsg($ts_path." not found.");
@@ -198,7 +219,7 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		my $lw = $key->get_timestamp();
 		::rptMsg($key_path);
-		::rptMsg("LastWrite: ".gmtime($lw)." Z");
+		::rptMsg("LastWrite: ".::getDateFromEpoch($lw)."Z");
 		::rptMsg("");
 
 # Note: fDenyTSConnections was added here because I've seen it used by bad actors,
@@ -216,7 +237,7 @@ sub pluginmain {
 		
 		eval {
 			my $fallowfc = $key->get_value("fAllowUnsolicitedFullControl")->get_data();
-			::rptMsg("fAllowUnsolicitedFullControl value = ".$fallow);
+			::rptMsg("fAllowUnsolicitedFullControl value = ".$fallowfc);
 		};
 				
 		eval {

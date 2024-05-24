@@ -4,12 +4,14 @@
 # contents of the ShutdownTime value
 # 
 # Change history
-#
+#  20200518 - updated date output format
+#  20080324 - created
 #
 # References
 #   
 # 
-# copyright 2008 H. Carvey
+# copyright 2020 Quantum Analytics Research, LLC
+# author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package shutdown;
 use strict;
@@ -19,7 +21,7 @@ my %config = (hive          => "System",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20080324);
+              version       => 20200518);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -53,13 +55,12 @@ sub pluginmain {
 		my $win;
 		if ($win = $root_key->get_subkey($win_path)) {
 			::rptMsg($win_path." key, ShutdownTime value");
-			::rptMsg($win_path);
-			::rptMsg("LastWrite Time ".gmtime($win->get_timestamp())." (UTC)");
+			::rptMsg("LastWrite time: ".::getDateFromEpoch($win->get_timestamp())."Z");
 			my $sd;
 			if ($sd = $win->get_value("ShutdownTime")->get_data()) {
 				my @vals = unpack("VV",$sd);
 				my $shutdown = ::getTime($vals[0],$vals[1]);
-				::rptMsg("  ShutdownTime = ".gmtime($shutdown)." (UTC)");
+				::rptMsg("ShutdownTime  : ".::getDateFromEpoch($shutdown)."Z");
 				
 			}
 			else {

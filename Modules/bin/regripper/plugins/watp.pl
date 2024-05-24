@@ -2,12 +2,13 @@
 # watp
 #
 # Change history:
+#  20200427 - updated output date format
 #  20190506 - created
 # 
 # Ref:
 #  
 #
-# copyright 2019 QAR,LLC 
+# copyright 2020 QAR,LLC 
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package watp;
@@ -19,7 +20,7 @@ my %config = (hive          => "Software",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20190506);
+              version       => 20200427);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -36,10 +37,10 @@ my $VERSION = getVersion();
 sub pluginmain {
 	my $class = shift;
 	my $hive = shift;
-	::rptMsg("Launching watp v.".$VERSION);
+	::logMsg("Launching watp v.".$VERSION);
 	::rptMsg("watp v.".$VERSION); # banner
 	::rptMsg("(".$config{hive}.") ".getShortDescr()."\n"); # banner 
-	my $key_path = ('Microsoft\\Windows Advanced Protection');,
+	my $key_path = ('Microsoft\\Windows Advanced Protection');
 	         
 	my $reg = Parse::Win32Registry->new($hive);
 	my $root_key = $reg->get_root_key;
@@ -47,7 +48,7 @@ sub pluginmain {
 	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		
 		my @vals = $key->get_list_of_values();
 		foreach my $v (@vals) {

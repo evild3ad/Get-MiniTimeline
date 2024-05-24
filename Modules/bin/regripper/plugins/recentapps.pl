@@ -2,12 +2,14 @@
 # recentapps.pl
 #  
 # Change history
+#  20200515 - updated date output format
 #  20171013 - created
 #
 # References
 #  https://twitter.com/EricRZimmerman/status/916422135987474433
 # 
-# copyright 2017 H. Carvey, keydet89@yahoo.com
+# copyright 2020 Quantum Analytics Research, LLC
+# author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package recentapps;
 use strict;
@@ -17,7 +19,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20171013);
+              version       => 20200515);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -49,7 +51,7 @@ sub pluginmain {
 					::rptMsg("AppId           : ".$s->get_value("AppId")->get_data());
 					my ($t1,$t2) = unpack("VV",$s->get_value("LastAccessedTime")->get_data());
 					my $lat = ::getTime($t1,$t2);
-					::rptMsg("LastAccessedTime: ".gmtime($lat)." UTC");
+					::rptMsg("LastAccessedTime: ".::getDateFromEpoch($lat)."Z");
 					::rptMsg("LaunchCount     : ".$s->get_value("LaunchCount")->get_data());
 				};
 				
@@ -62,7 +64,7 @@ sub pluginmain {
 					      ::rptMsg("  Path           : ".$r->get_value("Path")->get_data());
 					      my ($l1,$l2) = unpack("VV",$r->get_value("LastAccessedTime")->get_data());
 					      my $l = ::getTime($l1,$l2);
-					      ::rptMsg("  LastAccessedTime: ".gmtime($l)." UTC");
+					      ::rptMsg("  LastAccessedTime: ".::getDateFromEpoch($l)."Z");
 					      ::rptMsg("");
 				      };
 						}

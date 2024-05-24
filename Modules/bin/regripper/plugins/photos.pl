@@ -3,12 +3,13 @@ package photos;
 # photos.pl - read data on images opened via Win8 Photos app
 # 
 # Change history
+#  20200525 - updated date output format
 #  20130308 - created
 #
 # Ref:
 #  http://dfstream.blogspot.com/2013/03/windows-8-tracking-opened-photos.html
 #
-# Copyright 2013 QAR, LLC
+# Copyright 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #------------------------------------------------------------
 use strict;
@@ -17,16 +18,16 @@ my %config = (hive          => "USRCLASS\.DAT",
 							hivemask      => 32,
 							output        => "report",
 							category      => "User Activity",
-              osmask        => 20, #not used at the moment
+              osmask        => 20, 
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20130102);
+              version       => 20200525);
 
 sub getConfig{return %config}
 
 sub getShortDescr {
-	return "Shell/BagMRU traversal in Win7 USRCLASS.DAT hives";	
+	return "Shell/BagMRU traversal in Win7 USRCLASS\.DAT hives";	
 }
 sub getDescr{}
 sub getRefs {}
@@ -61,7 +62,7 @@ sub pluginmain {
 				my $name = $s->get_name();
 				my $lw   = $s->get_timestamp();
 				::rptMsg($name);
-				::rptMsg("LastWrite: ".gmtime($lw)." UTC");
+				::rptMsg("LastWrite: ".::getDateFromEpoch($lw)."Z");
 				
 				eval {
 					my $fp = $s->get_value("FilePath")->get_data();
@@ -72,7 +73,7 @@ sub pluginmain {
 					my $last = $s->get_value("LastUpdatedTime")->get_data();
 					my ($v0,$v1) = unpack("VV",$last);
 					my $l = ::getTime($v0,$v1);
-					::rptMsg("LastUpdatedTime: ".gmtime($l)." UTC");
+					::rptMsg("LastUpdatedTime: ".::getDateFromEpoch($l)."Z");
 				};
 				
 				eval {

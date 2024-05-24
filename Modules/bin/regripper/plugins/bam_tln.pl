@@ -53,7 +53,7 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		$current = $key->get_value("Current")->get_data();
 		$ccs = "ControlSet00".$current;
-		my $bam_path = $ccs."\\Services\\bam\\UserSettings";
+		my $bam_path = $ccs."\\Services\\bam\\State\\UserSettings";
 		my $bam;
 		if ($bam = $root_key->get_subkey($bam_path)) {
 			my @sk = $bam->get_list_of_subkeys();

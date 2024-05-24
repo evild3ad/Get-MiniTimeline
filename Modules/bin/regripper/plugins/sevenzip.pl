@@ -1,9 +1,9 @@
-#-----------------------------------------------------------
+#-------------------------------------------------------------------------
 # sevenzip.pl
 # 
-# 
-#
 # Change history
+#   20210329 - added LastWrite times for parent keys and printed header
+#   20200515 - minor updates
 #   20130315 - minor updates added
 #   20100218 - created
 #
@@ -11,9 +11,11 @@
 #
 # 
 #
-# copyright 2013 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
-#-----------------------------------------------------------
+#
+# revisions 2021-03-29 by Dan O'Day, d@4n68r.com
+#-------------------------------------------------------------------------
 package sevenzip;
 use strict;
 
@@ -22,7 +24,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20130315);
+              version       => 20210329);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -40,6 +42,8 @@ sub pluginmain {
 	my $ntuser = shift;
 	my %hist;
 	::logMsg("Launching 7-zip v.".$VERSION);
+	::rptMsg("sevenzip v.".$VERSION); # banner
+    ::rptMsg("- ".getShortDescr()."\n"); # banner
 	
 	my $reg = Parse::Win32Registry->new($ntuser);
 	my $root_key = $reg->get_root_key;
@@ -52,48 +56,66 @@ sub pluginmain {
 		if ($key = $root_key->get_subkey($key_path)) {
 		
 			eval {
-				::rptMsg("PanelPath0: ".$key->get_subkey("FM")->get_value("PanelPath0")->get_data());
+				my $s = $key->get_subkey("FM");
+				::rptMsg("FM LastWrite: [".::getDateFromEpoch($s->get_timestamp())."Z]");
+				::rptMsg("");
+			};
+			
+			eval {
+				my $s = $key->get_subkey("Compression");
+				::rptMsg("Compression LastWrite: [".::getDateFromEpoch($s->get_timestamp())."Z]");
+				::rptMsg("");
+			};
+			
+			eval {
+				my $s = $key->get_subkey("Extraction");
+				::rptMsg("Extraction LastWrite: [".::getDateFromEpoch($s->get_timestamp())."Z]");
+				::rptMsg("");
+			};
+			
+			eval {
+				::rptMsg("FM\\PanelPath0: ".$key->get_subkey("FM")->get_value("PanelPath0")->get_data());
 				::rptMsg("");
 			};
 
 			eval {
-				::rptMsg("ArcHistory:");
+				::rptMsg("Compression\\ArcHistory:");
 				my $copy = $key->get_subkey("Compression")->get_value("ArcHistory")->get_data();
-				my @c = split(/\x00\x00/,$copy);
+				my @c = split(/\00\00/,$copy);
 				foreach my $hist (@c) {
-					$hist =~ s/\x00//g;
+					$hist =~ s/\00//g;
 					::rptMsg("  ".$hist);
 				}
 			};
 		
 			eval {
-				::rptMsg("PathHistory:");
+				::rptMsg("Extraction\\PathHistory:");
 				my $copy = $key->get_subkey("Extraction")->get_value("PathHistory")->get_data();
-				my @c = split(/\x00\x00/,$copy);
+				my @c = split(/\00\00/,$copy);
 				foreach my $hist (@c) {
-					$hist =~ s/\x00//g;
+					$hist =~ s/\00//g;
 					::rptMsg("  ".$hist);
 				}
 				::rptMsg("");
 			};
 			
 			eval {
-				::rptMsg("CopyHistory:");
+				::rptMsg("FM\\CopyHistory:");
 				my $copy = $key->get_subkey("FM")->get_value("CopyHistory")->get_data();
-				my @c = split(/\x00\x00/,$copy);
+				my @c = split(/\00\00/,$copy);
 				foreach my $hist (@c) {
-					$hist =~ s/\x00//g;
+					$hist =~ s/\00//g;
 					::rptMsg("  ".$hist);
 				}
 				::rptMsg("");
 			};
 			
 			eval {
-				::rptMsg("FolderHistory:");
+				::rptMsg("FM\\FolderHistory:");
 				my $copy = $key->get_subkey("FM")->get_value("FolderHistory")->get_data();
-				my @c = split(/\x00\x00/,$copy);
+				my @c = split(/\00\00/,$copy);
 				foreach my $hist (@c) {
-					$hist =~ s/\x00//g;
+					$hist =~ s/\00//g;
 					::rptMsg("  ".$hist);
 				}
 			};

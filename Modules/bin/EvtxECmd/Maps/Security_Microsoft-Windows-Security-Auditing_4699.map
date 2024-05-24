@@ -1,0 +1,63 @@
+Author: Mike Pilkington
+Description: Scheduled Task deleted
+EventId: 4699
+Channel: Security
+Provider: Microsoft-Windows-Security-Auditing
+Maps:
+  -
+    Property: UserName
+    PropertyValue: "%domain%\\%user%"
+    Values:
+      -
+        Name: domain
+        Value: "/Event/EventData/Data[@Name=\"SubjectDomainName\"]"
+      -
+        Name: user
+        Value: "/Event/EventData/Data[@Name=\"SubjectUserName\"]"
+  -
+    Property: PayloadData1
+    PropertyValue: "TaskName: %TaskName%"
+    Values:
+      -
+        Name: TaskName
+        Value: "/Event/EventData/Data[@Name=\"TaskName\"]"
+  -
+    Property: PayloadData2
+    PropertyValue: "TaskContent: %TaskContent%"
+    Values:
+      -
+        Name: TaskContent
+        Value: "/Event/EventData/Data[@Name=\"TaskContent\"]"
+
+# Documentation:
+# https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventid=4699
+# https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4699
+# https://github.com/nasbench/EVTX-ETW-Resources/blob/main/ETWProvidersCSVs/Internal/Microsoft-Windows-Security-Auditing.csv
+#
+# Example Event Data:
+# <Event>
+#  <System>
+#    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="54878925-5478-4994-a5ba-3e3babcc30d" />
+#    <EventID>4699</EventID>
+#    <Version>0</Version>
+#    <Level>0</Level>
+#    <Task>12345</Task>
+#    <Opcode>0</Opcode>
+#    <Keywords>0x8020000333000000</Keywords>
+#    <TimeCreated SystemTime="2020-10-14 23:01:23.7988989" />
+#    <EventRecordID>456832483</EventRecordID>
+#    <Correlation ActivityID="b805453f-a27d-0122-4045-05basd42d601" />
+#    <Execution ProcessID="679" ThreadID="123" />
+#    <Channel>Security</Channel>
+#    <Computer>HOSTNAME.DOMAIN.net</Computer>
+#    <Security />
+#  </System>
+#  <EventData>
+#    <Data Name="SubjectUserSid">S-1-5-21-527212340-1504560517-725345543-676183</Data>
+#    <Data Name="SubjectUserName">USERNAME</Data>
+#    <Data Name="SubjectDomainName">DOMAIN</Data>
+#    <Data Name="SubjectLogonId">0x13123</Data>
+#    <Data Name="TaskName">\{3D2A132-BF69-4F06-ACAE-BC5G0FE5B693}</Data>
+#    <Data Name="TaskContent"></Data>
+#  </EventData>
+# </Event>

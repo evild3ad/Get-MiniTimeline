@@ -2,6 +2,7 @@
 # svcdll.pl
 # 
 # Change history
+#   20200525 - updated date output format, removed alertMsg() functionality
 #   20131010 - added checks for Derusbi, hcdloader malware
 #     - ServiceDll value ends in .dat
 #     - ServiceDll with no path
@@ -17,7 +18,8 @@
 #   Service names (in malware, sometimes random) and the ServiceDll value,
 #   sorted based on the LastWrite time of the <service name>\Parameters subkey.
 #
-# copyright 2009 H. Carvey
+# copyright 2020 Quantum Analytics Research, LLC
+# author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package svcdll;
 use strict;
@@ -28,7 +30,7 @@ my %config = (hive          => "System",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20130603);
+              version       => 20200525);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -90,12 +92,10 @@ sub pluginmain {
 				}
 			
 				foreach my $t (reverse sort {$a <=> $b} keys %svcs) {
-					::rptMsg(gmtime($t)."Z");
+					::rptMsg(::getDateFromEpoch($t)."Z");
 					foreach my $item (@{$svcs{$t}}) {
 						::rptMsg("  ".$item);
-						
-						alertCheckPath($item);
-						alertCheckADS($item);
+		
 					}
 					::rptMsg("");
 				}
@@ -112,45 +112,6 @@ sub pluginmain {
 		::rptMsg($key_path." not found.");
 	}
 }
-#-----------------------------------------------------------
-# alertCheckPath()
-#-----------------------------------------------------------
-sub alertCheckPath {
-	my $path = shift;
-	my $lcpath = $path;
-	$lcpath =~ tr/[A-Z]/[a-z]/;
 
-	my @alerts = ("recycle","globalroot","temp","system volume information","appdata",
-	              "application data","wbem");
-	
-	foreach my $a (@alerts) {
-		if (grep(/$a/,$path)) {
-			::alertMsg("ALERT: svcdll: ".$a." found in path: ".$path);              
-		}
-	}
-	
-	if ($lcpath =~ m/\.dat$/) {
-		::alertMsg("ALERT: svcdll: Possible Derusbi infection: ".$path);
-	}
-	
-	if ($lcpath =~ m/\raswmi\.dll$/) {
-		::alertMsg("ALERT: svcdll: Possible hcdloader infection: ".$path);
-	}
-	
-	my @list = split(/\\/,$path);
-	if (scalar(@list) < 3) {
-		::alertMsg("ALERT: svcdll: Relative path detected: ".$path);
-	}
-}
-
-#-----------------------------------------------------------
-# alertCheckADS()
-#-----------------------------------------------------------
-sub alertCheckADS {
-	my $path = shift;
-	my @list = split(/\\/,$path);
-	my $last = $list[scalar(@list) - 1];
-	::alertMsg("ALERT: svcdll: Poss. ADS found in path: ".$path) if grep(/:/,$last);
-}
 
 1;

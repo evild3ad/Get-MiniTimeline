@@ -5,9 +5,10 @@
 # and after seeing what was in it, I just wrote up a plugin
 #
 # History:
+#  20200518 - updated date output format
 #  20120716 - created
 #
-# copyright 2012 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package systemindex;
@@ -18,7 +19,7 @@ my %config = (hive          => "Software",
               hasDescr      => 0,
               hasRefs       => 1,
               osmask        => 22,
-              version       => 20120716);
+              version       => 20200518);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -48,7 +49,7 @@ sub pluginmain {
 	    foreach my $s (@subkeys) {
 		  	my $name = $s->get_name();
 		  	my $ts = $s->get_timestamp();
-		  	::rptMsg($name." - LastWrite: ".gmtime($ts));
+		  	::rptMsg($name." - LastWrite time: ".::getDateFromEpoch($ts)."Z");
 		  	
 		  	my $path;
 		  	eval {

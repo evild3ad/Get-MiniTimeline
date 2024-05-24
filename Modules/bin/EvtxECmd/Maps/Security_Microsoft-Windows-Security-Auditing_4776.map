@@ -1,0 +1,76 @@
+Author: Eric Zimmerman saericzimmerman@gmail.com and Andrew Rathbun
+Description: NTLM authentication request
+EventId: 4776
+Channel: Security
+Provider: Microsoft-Windows-Security-Auditing
+Maps:
+  -
+    Property: PayloadData1
+    PropertyValue: "Target: %TargetUserName%"
+    Values:
+      -
+        Name: TargetUserName
+        Value: "/Event/EventData/Data[@Name=\"TargetUserName\"]"
+  -
+    Property: PayloadData2
+    PropertyValue: "Workstation: %Workstation%"
+    Values:
+      -
+        Name: Workstation
+        Value: "/Event/EventData/Data[@Name=\"Workstation\"]"
+  -
+    Property: PayloadData3
+    PropertyValue: "Status: %Status%"
+    Values:
+      -
+        Name: Status
+        Value: "/Event/EventData/Data[@Name=\"Status\"]"
+
+Lookups:
+  -
+    Name: Status
+    Default: Unknown code
+    Values:
+      0xC0000064: user name does not exist
+      0xC000006A: user name is correct but the password is wrong
+      0XC000006D: the cause is either a bad username or authentication information
+      0xC000006F: user logon outside authorized hours
+      0xC0000070: user logon from unauthorized workstation
+      0xC0000071: user logon with expired password
+      0xC0000072: user logon to account disabled by administrator
+      0xC0000193: user logon with expired account
+      0XC0000224: user is required to change password at next logon
+      0xC0000234: user is currently locked out
+      0xC0000371: local account store does not contain secret material for the specified accounts
+      0x0: Status OK
+
+# Documentation:
+# https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventid=4776
+# https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4776
+# https://github.com/nasbench/EVTX-ETW-Resources/blob/main/ETWProvidersCSVs/Internal/Microsoft-Windows-Security-Auditing.csv
+#
+# Example Event Data:
+# <Event>
+#  <System>
+#    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="54849625-5478-4994-a5ba-3e3b0328c30d" />
+#    <EventID>4776</EventID>
+#    <Version>0</Version>
+#    <Level>0</Level>
+#    <Task>14336</Task>
+#    <Opcode>0</Opcode>
+#    <Keywords>0x8010000000000000</Keywords>
+#    <TimeCreated SystemTime="2018-07-11 05:42:11.1768331" />
+#    <EventRecordID>24410</EventRecordID>
+#    <Correlation ActivityID="3fd16c43-fc41-0001-ad6c-d13f41fcd301" />
+#    <Execution ProcessID="744" ThreadID="2756" />
+#    <Channel>Security</Channel>
+#    <Computer>base-rd-01.shieldbase.lan</Computer>
+#    <Security />
+#  </System>
+#  <EventData>
+#    <Data Name="PackageName">MICROSOFT_AUTHENTICATION_PACKAGE_V1_0</Data>
+#    <Data Name="TargetUserName">tdungan</Data>
+#    <Data Name="Workstation">BASE-RD-01</Data>
+#    <Data Name="Status">0xC0000064</Data>
+#  </EventData>
+# </Event>

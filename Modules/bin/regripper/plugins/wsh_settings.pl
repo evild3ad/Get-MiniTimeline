@@ -2,12 +2,13 @@
 # wsh_settings
 #
 # Change history:
+#  20200517 - updated date output format
 #  20180819 - created
 # 
 # Ref:
 #  http://www.hexacorn.com/blog/2018/08/18/lateral-movement-using-wshcontroller-wshremote-objects-iwshcontroller-and-iwshremote-interfaces/
 #
-# copyright 2018 QAR,LLC 
+# copyright 2020 QAR,LLC 
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package wsh_settings;
@@ -19,7 +20,7 @@ my %config = (hive          => "Software",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20180819);
+              version       => 20200517);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -36,9 +37,9 @@ sub pluginmain {
 	my $class = shift;
 	my $hive = shift;
 	my ($name,$data);
-	::rptMsg("Launching wsh_settings v.".$VERSION);
-	::rptMsg("wsh_settings v.".$VERSION); # banner
-	::rptMsg("(".$config{hive}.") ".getShortDescr()."\n"); # banner 
+	::logMsg("Launching wsh_settings v.".$VERSION);
+	::rptMsg("wsh_settings v.".$VERSION); 
+	::rptMsg("(".$config{hive}.") ".getShortDescr()."\n");  
 	my $key_path = ('Microsoft\\Windows Script Host\\Settings');
 	
 	my $reg = Parse::Win32Registry->new($hive);
@@ -47,7 +48,7 @@ sub pluginmain {
 	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("Key LastWrite: ".gmtime($key->get_timestamp())." Z");
+		::rptMsg("Key LastWrite: ".::getDateFromEpoch($key->get_timestamp())."Z");
 		my @vals = $key->get_list_of_values();
 		if (scalar @vals > 1) {
 			foreach my $v (@vals) {

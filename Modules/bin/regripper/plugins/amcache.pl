@@ -2,6 +2,7 @@
 # amcache.pl 
 #   
 # Change history
+#   20200515 - updated date output format
 #   20180311 - updated to support newer version files, albeit without parsing devices
 #   20170315 - added output for Product Name and File Description values
 #   20160818 - added check for value 17
@@ -13,7 +14,7 @@
 #   https://binaryforay.blogspot.com/2017/10/amcache-still-rules-everything-around.html
 #   http://www.swiftforensics.com/2013/12/amcachehve-in-windows-8-goldmine-for.html
 #
-# Copyright (c) 2018 QAR, LLC
+# Copyright (c) 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package amcache;
@@ -25,7 +26,7 @@ my %config = (hive          => "amcache",
               hasRefs       => 1,
               osmask        => 22,
               category      => "program execution",
-              version       => 20180311);
+              version       => 20200515);
 my $VERSION = getVersion();
 
 # Functions #
@@ -111,7 +112,7 @@ sub parseInventoryApplicationFile {
 				$hash = $s->get_value("FileID")->get_data();
 				$hash =~ s/^0000//;
 			};
-			::rptMsg($path."  LastWrite: ".gmtime($lw));	
+			::rptMsg($path."  LastWrite: ".::getDateFromEpoch($lw)."Z");	
 			::rptMsg("Hash: ".$hash);
 			::rptMsg("");
 		}
@@ -158,7 +159,7 @@ sub parseFile {
 		if (scalar(@sk) > 0) {
 			foreach my $s (@sk) {
 				::rptMsg("File Reference: ".$s->get_name());
-				::rptMsg("LastWrite     : ".gmtime($s->get_timestamp())." Z");
+				::rptMsg("LastWrite     : ".::getDateFromEpoch($s->get_timestamp())."Z");
 # update 20131213: based on trial and error, it appears that not all file
 # references will have all of the values, such as Path, or SHA-1		
 				eval {
@@ -187,26 +188,26 @@ sub parseFile {
 					
 				eval {
 					@t = unpack("VV",$s->get_value("11")->get_data());
-					$gt = gmtime(::getTime($t[0],$t[1]));
-					::rptMsg("Last Mod Time : ".$gt." Z");
+					$gt = ::getDateFromEpoch(::getTime($t[0],$t[1]));
+					::rptMsg("Last Mod Time : ".$gt."Z");
 				};
 					
 				eval {
 					@t = unpack("VV",$s->get_value("17")->get_data());
-					$gt = gmtime(::getTime($t[0],$t[1]));
-					::rptMsg("Last Mod Time2: ".$gt." Z");
+					$gt = ::getDateFromEpoch(::getTime($t[0],$t[1]));
+					::rptMsg("Last Mod Time2: ".$gt."Z");
 				};
 					
 				eval {
 					@t = unpack("VV",$s->get_value("12")->get_data());
-					$gt = gmtime(::getTime($t[0],$t[1]));
-					::rptMsg("Create Time   : ".$gt." Z");
+					$gt = ::getDateFromEpoch(::getTime($t[0],$t[1]));
+					::rptMsg("Create Time   : ".$gt."Z");
 				};
 					
 				eval {
-					$gt = gmtime($s->get_value("f")->get_data());
+					$gt = ::getDateFromEpoch($s->get_value("f")->get_data());
 #						$gt = gmtime(unpack("V",$s->get_value("f")->get_data()));
-					::rptMsg("Compile Time  : ".$gt." Z");
+					::rptMsg("Compile Time  : ".$gt."Z");
 				};
 				::rptMsg("");
 			}

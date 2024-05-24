@@ -2,6 +2,7 @@
 # runonceex
 #
 # Change history:
+#  20200427 - updated output date format
 #  20190716 - created
 # 
 # Ref:
@@ -19,7 +20,7 @@ my %config = (hive          => "Software",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20190716);
+              version       => 20200427);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -35,7 +36,7 @@ my $VERSION = getVersion();
 sub pluginmain {
 	my $class = shift;
 	my $hive = shift;
-	::rptMsg("Launching runonceex v.".$VERSION);
+	::logMsg("Launching runonceex v.".$VERSION);
 	::rptMsg("runonceex v.".$VERSION); # banner
 	::rptMsg("(".$config{hive}.") ".getShortDescr()."\n"); # banner 
 	my $key_path = ('Microsoft\\Windows\\CurrentVersion\\RunOnceEx');
@@ -52,13 +53,14 @@ sub pluginmain {
 		if (scalar(@sk) > 0) {
 			foreach my $s (@sk) {
 				::rptMsg($s->get_name());
-				::rptMsg("LastWrite Time ".gmtime($s->get_timestamp())." (UTC)");
+				::rptMsg("LastWrite Time ".::getDateFromEpoch($s->get_timestamp())."Z");
 
 # Gets values and data				
 				my @vals = $s->get_list_of_values();
 				if (scalar(@vals) > 0) {
 					foreach my $v (@vals) {
 						::rptMsg($v->get_name()." -> ".$v->get_data());
+					}
 				}
 				::rptMsg("");
 				

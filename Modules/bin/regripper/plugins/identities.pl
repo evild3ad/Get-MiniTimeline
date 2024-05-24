@@ -3,12 +3,13 @@
 #   
 # 
 # Change history
+#   20200525 - updated date output format
 #   20151211 - created
 #
 # References
 #  https://www.fireeye.com/blog/threat-research/2015/12/fin1-targets-boot-record.html
 #
-# Copyright 2015 QAR LLC
+# Copyright 2020 QAR LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package identities;
@@ -19,7 +20,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20151211);
+              version       => 20200525);
 my $VERSION = getVersion();
 
 sub getDescr {}
@@ -28,7 +29,7 @@ sub getConfig {return %config}
 sub getHive {return $config{hive};}
 sub getVersion {return $config{version};}
 sub getShortDescr {
-	return "Extracts values from Identities key; NTUSER.DAT";
+	return "Extracts values from Identities key; NTUSER\.DAT";
 }
 
 sub pluginmain {
@@ -45,7 +46,7 @@ sub pluginmain {
 
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 
 		my @vals = $key->get_list_of_values();

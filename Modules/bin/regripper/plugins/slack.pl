@@ -1,16 +1,17 @@
-#! c:\perl\bin\perl.exe
+
 #-----------------------------------------------------------
 # slack.pl
 # 
 #
 # Change history
+#   20200517 - minor updates
 #   20180926 - created
 #
 # References:
 #   
 #
 # 
-# copyright 2018 QAR, LLC
+# copyright 2020 QAR, LLC
 # Author: H. Carvey
 #-----------------------------------------------------------
 package slack;
@@ -22,7 +23,7 @@ my %config = (hive          => "All",
               hasRefs       => 0,
               osmask        => 22,
               category      => "slack",
-              version       => 20180926);
+              version       => 20200517);
 
 sub getConfig{return %config}
 sub getShortDescr {

@@ -5,6 +5,8 @@
 #
 #
 # Change History:
+#    20200518 - additional updates
+#    20200515 - minor updates
 #    20190128 - Added Nla\Wireless data
 #    20150812 - updated to include Nla\Cache data
 #    20120917 - updated to include NameType value
@@ -14,7 +16,7 @@
 #
 # References
 #
-# copyright 2015 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package networklist;
@@ -25,12 +27,12 @@ my %config = (hive          => "Software",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20190128);
+              version       => 20200518);
 
 sub getConfig{return %config}
 
 sub getShortDescr {
-	return "Collects network info from Vista+ NetworkList key";	
+	return "Collects network info from NetworkList key";	
 }
 sub getDescr{}
 sub getRefs {}
@@ -126,7 +128,7 @@ sub pluginmain {
 			foreach my $n (keys %nl) {
 				my $str = sprintf "%-15s Gateway Mac: ".$nl{$n}{DefaultGatewayMac},$nl{$n}{ProfileName};
 				::rptMsg($nl{$n}{ProfileName});
-#				::rptMsg("  Key LastWrite    : ".gmtime($nl{$n}{LastWrite})." Z");
+				::rptMsg("  Key LastWrite    : ".::getDateFromEpoch($nl{$n}{LastWrite})."Z");
 				::rptMsg("  DateLastConnected: ".$nl{$n}{DateLastConnected});
 				::rptMsg("  DateCreated      : ".$nl{$n}{DateCreated});
 				::rptMsg("  DefaultGatewayMac: ".$nl{$n}{DefaultGatewayMac});
@@ -185,10 +187,8 @@ sub parseDate128 {
 	              "Aug","Sep","Oct","Nov","Dec");
 	my @days = ("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
 	my ($yr,$mon,$dow,$dom,$hr,$min,$sec,$ms) = unpack("v*",$date);
-	$hr = "0".$hr if ($hr < 10);
-	$min = "0".$min if ($min < 10);
-	$sec = "0".$sec if ($sec < 10);
-	my $str = $days[$dow]." ".$months[$mon - 1]." ".$dom." ".$hr.":".$min.":".$sec." ".$yr;
+#	my $str = $days[$dow]." ".$months[$mon - 1]." ".$dom." ".$hr.":".$min.":".$sec." ".$yr;
+	my $str = sprintf("%04d-%02d-%02d %02d:%02d:%02d",$yr,$mon,$dom,$hr,$min,$sec);
 	return $str;
 }
 1;

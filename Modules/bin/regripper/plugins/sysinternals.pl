@@ -3,12 +3,13 @@
 #  
 #
 # Change history
-#   20120608- created
+#   20200511 - updated date output format
+#   20120608 - created
 #
 # References
 #
 # 
-# copyright 2012 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package sysinternals;
@@ -44,11 +45,11 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg("SysInternals");
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		my @subkeys = $key->get_list_of_subkeys();
 		if (scalar(@subkeys) > 0) {
 			foreach my $s (@subkeys) { 
-				::rptMsg($s->get_name()." [".gmtime($s->get_timestamp())." (UTC)]");
+				::rptMsg($s->get_name()." [".::getDateFromEpoch($s->get_timestamp())."Z]");
 				
 				my $eula;
 				eval {

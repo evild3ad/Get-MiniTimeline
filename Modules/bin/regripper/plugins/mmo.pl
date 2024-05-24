@@ -4,6 +4,7 @@
 # Category: AutoStart, Malware
 # 
 # History
+#   20200517 - updated date output format
 #   20130217 - updated with Trojan.Swaylib detection
 #   20130214 created
 #
@@ -14,7 +15,7 @@
 #   http://blog.fireeye.com/research/2013/02/the-number-of-the-beast.html
 #   http://www.joesecurity.org/reports/report-f3b9663a01a73c5eca9d6b2a0519049e.html
 #
-# copyright 2013, Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package mmo;
@@ -26,7 +27,7 @@ my %config = (hive          => "NTUSER\.DAT",
               category      => "malware",
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20130217);
+              version       => 20200517);
 
 sub getConfig{return %config}
 
@@ -54,7 +55,7 @@ sub pluginmain {
 	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 		my @vals = $key->get_list_of_values();
 		if (scalar(@vals) > 0) {
@@ -72,7 +73,8 @@ sub pluginmain {
 	}
 # Section added 17 Feb 2013, to address Trojan.Swaylib
 #
-	$key_path = "Software\\Microsoft\\CTF\\LangBarAddIn";
+	my $key_path = "Software\\Microsoft\\CTF\\LangBarAddIn";
+	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		my @subkeys = $key->get_list_of_subkeys();
 		if (scalar(@subkeys) > 0) {
@@ -80,7 +82,7 @@ sub pluginmain {
 			::rptMsg($key_path);
 			foreach my $s (@subkeys) {
 				::rptMsg("  ".$s->get_name());
-				::rptMsg("  LastWrite time: ".gmtime($s->get_timestamp()));
+				::rptMsg("  LastWrite time: ".::getDateFromEpoch($s->get_timestamp())."Z");
 				::rptMsg("");
 				
 				my $path;

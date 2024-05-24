@@ -4,12 +4,13 @@
 # that Win32/Hioles.C uses this key as a persistence mechanism
 # 
 # Change history
+#   20200526 - updated date output format
 #   20120312 - added Hostname
 #
 # References
 #   
 # 
-# copyright 2012 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package securityproviders;
@@ -20,7 +21,7 @@ my %config = (hive          => "System",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20120312);
+              version       => 20200526);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -53,7 +54,7 @@ sub pluginmain {
 		my $key_path = $ccs."\\Control\\SecurityProviders";
 		my $key;
 		if ($key = $root_key->get_subkey($key_path)) {
-			::rptMsg("LastWrite: ".gmtime($key->get_timestamp()));
+			::rptMsg("LastWrite: ".::getDateFromEpoch($key->get_timestamp())."Z");
 			::rptMsg("");
 			my $providers = $key->get_value("SecurityProviders")->get_data();
 			::rptMsg("SecurityPrividers = ".$providers);

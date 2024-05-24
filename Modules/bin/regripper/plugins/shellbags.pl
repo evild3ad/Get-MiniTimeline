@@ -3,6 +3,7 @@
 # RR plugin to parse (Vista, Win7/Win2008R2) shell bags
 #
 # History:
+#   20200428 - updated output date format
 #   20190715 - updated to parse WPD devices better
 #   20180702 - update to parseGUID function
 #   20180117 - modification thanks to input/data from Mike Godfrey
@@ -36,7 +37,7 @@
 # assistance with some parsing.
 #
 # 
-# copyright 2015 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package shellbags;
@@ -51,7 +52,7 @@ my %config = (hive          => "USRCLASS\.DAT",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20190715);
+              version       => 20200428);
 
 sub getConfig{return %config}
 
@@ -146,6 +147,7 @@ my %folder_types = ("{724ef170-a42d-4fef-9f26-b60e846fba4f}" => "Administrative 
     "{a8cdff1c-4878-43be-b5fd-f8091c1c60d0}" => "Documents",
     "{fdd39ad0-238f-46af-adb4-6c85480369c7}" => "Documents",
     "{374de290-123f-4565-9164-39c4925e467b}" => "Downloads",
+    "{088e3905-0323-4b02-9826-5d99428e115f}" => "Downloads",
     "{de61d971-5ebc-4f02-a3a9-6c82895e5c04}" => "Get Programs",
     "{a305ce99-f527-492b-8b1a-7e76fa98d6e4}" => "Installed Updates",
     "{871c5380-42a0-1069-a2ea-08002b30309d}" => "Internet Explorer (Homepage)",

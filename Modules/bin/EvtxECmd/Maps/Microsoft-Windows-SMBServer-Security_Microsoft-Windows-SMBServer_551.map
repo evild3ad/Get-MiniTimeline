@@ -1,0 +1,120 @@
+Author: Andrew Rathbun
+Description: SMB session authentication failure
+EventId: 551
+Channel: "Microsoft-Windows-SMBServer/Security"
+Provider: "Microsoft-Windows-SMBServer"
+Maps:
+  -
+    Property: UserName
+    PropertyValue: "%UserName%"
+    Values:
+      -
+        Name: UserName
+        Value: "/Event/UserData/EventData/UserName"
+  -
+    Property: RemoteHost
+    PropertyValue: "%ClientName%"
+    Values:
+      -
+        Name: ClientName
+        Value: "/Event/UserData/EventData/ClientName"
+  -
+    Property: PayloadData1
+    PropertyValue: "Status: %Status%"
+    Values:
+      -
+        Name: Status
+        Value: "/Event/UserData/EventData/Status"
+  -
+    Property: PayloadData2
+    PropertyValue: "SessionGUID: %SessionGUID%"
+    Values:
+      -
+        Name: SessionGUID
+        Value: "/Event/UserData/EventData/SessionGUID"
+  -
+    Property: PayloadData3
+    PropertyValue: "ConnectionGUID: %ConnectionGUID%"
+    Values:
+      -
+        Name: ConnectionGUID
+        Value: "/Event/UserData/EventData/ConnectionGUID"
+  -
+    Property: PayloadData4
+    PropertyValue: "SessionId: %SessionId%"
+    Values:
+      -
+        Name: SessionId
+        Value: "/Event/UserData/EventData/SessionId"
+  -
+    Property: PayloadData5
+    PropertyValue: "SPN: %SPN%"
+    Values:
+      -
+        Name: SPN
+        Value: "/Event/UserData/EventData/SPN"
+
+Lookups:
+  -
+    Name: Status
+    Default: Unknown code
+    Values:
+      0xC000003A: The share path does not reference a valid resource
+      0xC000006D: The server rejected the client logon attempt or incorrect password during logon attempt.
+      0xC0000205: The server is out of resources. Out of memory or TIDs.
+      0xC00000CC: The server is temporarily paused or the share path is not valid.
+      0xC00000CF: The server is temporarily paused.
+      0xC00000D0: The server has no more connections available.
+      0xC000000D: Tree connect request after request to end session or internal error.
+      0x00010002: Invalid SMB. Not enough parameter bytes were sent. Did the client omit a session setup?
+      0xC0000022: The user is not authorized to access the resource.
+      0xC00000CB: Resource type invalid. Value of Service field in the request was invalid.
+      0x005B0002: The UID supplied is not defined to the session.
+      0xC0000072: User account on the target machine is disabled or has expired.
+
+# Documentation:
+# https://github.com/defendthehoneypot/incidentresponse#smb-brute-force-login
+# https://support.microsoft.com/en-us/topic/ntlm-authentication-fails-with-0xc0000022-error-for-windows-server-2012-windows-8-1-and-windows-server-2012-r2-after-update-is-applied-a4b23900-7cc2-2bb9-432d-831c79aea7a3
+# https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-cifs/f9a8a713-1c53-4fb0-908e-625389840cf8
+# https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cifs/8f11e0f3-d545-46cc-97e6-f00569e3e1bc
+# https://github.com/nasbench/EVTX-ETW-Resources/blob/main/ETWProvidersCSVs/Internal/Microsoft-Windows-SMBServer.csv
+# https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/microsoft-network-server-server-spn-target-name-validation-level
+# SPN = Service Principal Name
+#
+# Example Event Data:
+# <Event>
+# <Event>
+#   <System>
+#     <Provider Name="Microsoft-Windows-SMBServer" Guid="d48ce617-33a2-4bc3-a5c7-11aa4f29619e" />
+#     <EventID>551</EventID>
+#     <Version>1</Version>
+#     <Level>2</Level>
+#     <Task>551</Task>
+#     <Opcode>0</Opcode>
+#     <Keywords>0x810000002200008</Keywords>
+#     <TimeCreated SystemTime="2020-01-14 00:37:09.4067902" />
+#     <EventRecordID>86585</EventRecordID>
+#     <Correlation />
+#     <Execution ProcessID="4" ThreadID="11788" />
+#     <Channel>Microsoft-Windows-SMBServer/Security</Channel>
+#     <Computer>HOSTNAME.domain</Computer>
+#     <Security UserID="S-1-5-18" />
+#   </System>
+#   <UserData>
+#     <EventData>
+#       <SessionGUID>30367936-3631-000a-5a2a-cabc9eb4d501</SessionGUID>
+#       <ConnectionGUID>30316796-3631-000a-592a-cfff9abcd501</ConnectionGUID>
+#       <Status>0xC000006D</Status>
+#       <TranslatedStatus>0xC000006D</TranslatedStatus>
+#       <ClientAddressLength>128</ClientAddressLength>
+#       <ClientAddress>02-00-F4-D5-0A-70-8C-8F-00-00-00-00-00-00-00-00-02-00-FF-FF-0A-70-8C-8F-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00</ClientAddress>
+#       <SessionId>0x17C3930000005</SessionId>
+#       <UserNameLength>0</UserNameLength>
+#       <UserName></UserName>
+#       <ClientNameLength>16</ClientNameLength>
+#       <ClientName>\\10.123.123.123</ClientName>
+#       <SPN>session setup failed before the SPN could be queried</SPN>
+#       <SPNValidationPolicy>0</SPNValidationPolicy>
+#     </EventData>
+#   </UserData>
+# </Event>

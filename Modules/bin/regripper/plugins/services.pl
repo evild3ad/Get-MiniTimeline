@@ -4,6 +4,9 @@
 # services
 # 
 # Change history
+#   20200511 - updated date output format
+# *Note: LastWrite time stamps not used, as they don't provide much value
+#   20191024 - updated parsing of value data that includes ;
 #   20080507 - Added collection of Type and Start values; separated
 #              data by Services vs. Drivers; created separate plugin
 #              for Drivers
@@ -12,7 +15,8 @@
 # References
 #
 # 
-# copyright 2008 H. Carvey
+# copyright 2019 QAR, LLC
+# author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package services;
 #use strict;
@@ -22,7 +26,7 @@ my %config = (hive          => "System",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20080507);
+              version       => 20191024);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -114,14 +118,14 @@ sub pluginmain {
 						$group = $s->get_value("Group")->get_data();
 					};
 					
-					my $str = $name.";".$display.";".$image.";".$type.";".$start.";".$group;
+					my $str = $name."|".$display."|".$image."|".$type."|".$start."|".$group;
 					push(@{$svcs{$s->get_timestamp()}},$str) unless ($str eq "");
 				}
 			
 				foreach my $t (reverse sort {$a <=> $b} keys %svcs) {
-					::rptMsg(gmtime($t)."Z");
+					::rptMsg(gmtime($t)." Z");
 					foreach my $item (@{$svcs{$t}}) {
-						my ($n,$d,$i,$t,$s,$g) = split(/;/,$item,6);
+						my ($n,$d,$i,$t,$s,$g) = split(/\|/,$item,6);
 						::rptMsg("  Name      = ".$n);
 						::rptMsg("  Display   = ".$d);
 						::rptMsg("  ImagePath = ".$i);
@@ -140,12 +144,10 @@ sub pluginmain {
 		}
 		else {
 			::rptMsg($s_path." not found.");
-			::logMsg($s_path." not found.");
 		}
 	}
 	else {
 		::rptMsg($key_path." not found.");
-		::logMsg($key_path." not found.");
 	}
 }
 

@@ -1,10 +1,11 @@
-#! c:\perl\bin\perl.exe
+
 #-----------------------------------------------------------
 # typedurlstime.pl
 # Plugin for Registry Ripper, NTUSER.DAT edition - gets the 
 # TypedURLsTime values/data from Windows 8 systems
 #
 # Change history
+#   20200526 - updated date output format
 #   20120613 - created
 #
 # References
@@ -13,7 +14,7 @@
 # Notes:  New entries aren't added to the key until the current
 #         instance of IE is terminated.
 # 
-# copyright 2012 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package typedurlstime;
@@ -24,7 +25,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasDescr      => 0,
               hasRefs       => 1,
               osmask        => 22,
-              version       => 20120613);
+              version       => 20200526);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -41,8 +42,8 @@ sub pluginmain {
 	my $class = shift;
 	my $ntuser = shift;
 	::logMsg("Launching typedurlstime v.".$VERSION);
-	::rptMsg("typedurlstime v.".$VERSION); # banner
-	::rptMsg("(".$config{hive}.") ".getShortDescr()."\n"); # banner 
+	::rptMsg("typedurlstime v.".$VERSION); 
+	::rptMsg("(".$config{hive}.") ".getShortDescr()."\n"); 
 	my $reg = Parse::Win32Registry->new($ntuser);
 	my $root_key = $reg->get_root_key;
 	
@@ -51,7 +52,7 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg("TypedURLsTime");
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		my @vals = $key->get_list_of_values();
 		if (scalar(@vals) > 0) {
 			my %urls;
@@ -76,7 +77,7 @@ sub pluginmain {
 					::rptMsg("  ".$val." -> ".$data);
 				}
 				else {
-					::rptMsg("  ".$val." -> ".gmtime($data)." Z (".$url.")");
+					::rptMsg("  ".$val." -> ".::getDateFromEpoch($data)."Z (".$url.")");
 				}
 			}
 		}

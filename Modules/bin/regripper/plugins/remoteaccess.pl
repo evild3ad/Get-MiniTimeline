@@ -2,13 +2,14 @@
 # remoteaccess.pl
 #
 # History:
+#  20200517 - minor updates
 #  20160906 - created
 #
 # References:
 #  https://technet.microsoft.com/en-us/library/ff687746(v=ws.10).aspx
 #
 # 
-# copyright 2016 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package remoteaccess;
@@ -21,8 +22,8 @@ my %config = (hive          => "System",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              osmask        => 31,  #XP - Win7
-              version       => 20160906);
+              osmask        => 31,  
+              version       => 20200517);
 
 sub getConfig{return %config}
 sub getShortDescr {

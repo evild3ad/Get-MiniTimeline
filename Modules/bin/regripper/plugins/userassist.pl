@@ -1,10 +1,11 @@
-#! c:\perl\bin\perl.exe
+
 #-----------------------------------------------------------
 # userassist.pl
 # Plugin for Registry Ripper, NTUSER.DAT edition - gets the 
 # UserAssist values 
 #
 # Change history
+#  20200513 - updated date output format
 #  20170304 - removed alerts, added printing of values with no timestamps in the data
 #  20130603 - added alert functionality
 #  20100322 - Added CLSID list reference
@@ -50,7 +51,7 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg("UserAssist");
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 		my @subkeys = $key->get_list_of_subkeys();
 		if (scalar(@subkeys) > 0) {
@@ -128,7 +129,7 @@ sub processKey {
 			}
 		}
 		foreach my $t (reverse sort {$a <=> $b} keys %ua) {
-			::rptMsg(gmtime($t)." Z");
+			::rptMsg(::getDateFromEpoch($t)."Z");
 			foreach my $i (@{$ua{$t}}) {
 				::rptMsg("  ".$i);
 			}

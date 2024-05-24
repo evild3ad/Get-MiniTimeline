@@ -5,6 +5,7 @@
 # and after seeing what was in it, I just wrote up a plugin
 #
 # History:
+#  20200518 - updated date output format
 #  20120822 - added drive types hash based on MS KB161300
 #  20120716 - created
 #
@@ -19,7 +20,7 @@ my %config = (hive          => "Software",
               hasDescr      => 0,
               hasRefs       => 1,
               osmask        => 22,
-              version       => 20120822);
+              version       => 20200518);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -43,7 +44,6 @@ sub pluginmain {
 	             0x5 => "CDROM",
 	             0x6 => "RAMDISK");
 	
-	::logMsg("Launching volinfocache v.".$VERSION);
 	::rptMsg("Launching volinfocache v.".$VERSION);
 	::rptMsg("(".$config{hive}.") ".getShortDescr()."\n"); # banner 
 	my $reg = Parse::Win32Registry->new($hive);
@@ -58,7 +58,7 @@ sub pluginmain {
 	    foreach my $s (@subkeys) {
 		  	my $name = $s->get_name();
 		  	my $ts = $s->get_timestamp();
-		  	::rptMsg($name." - LastWrite: ".gmtime($ts));
+		  	::rptMsg($name." - LastWrite time: ".::getDateFromEpoch($ts)."Z");
 		  	
 		  	my $type;
 		  	eval {

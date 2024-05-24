@@ -4,9 +4,10 @@
 # Publisher values from Installer\UserData subkeys
 #
 # History
+#  20200517 - updated date output format
 #  20120917 - created
 #
-# copyright 2012 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package installer;
@@ -16,8 +17,8 @@ my %config = (hive          => "Software",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              osmask        => 31, #XP - Win7
-              version       => 20120917);
+              osmask        => 31, 
+              version       => 20200517);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -77,7 +78,7 @@ sub processSubkeys {
 			my $str;
 			my $lw = $s->get_timestamp();
 			::rptMsg("Key      : ".$s->get_name());
-			::rptMsg("LastWrite: ".gmtime($lw));
+			::rptMsg("LastWrite: ".::getDateFromEpoch($lw)."Z");
 			eval {
 				$date = $s->get_subkey("InstallProperties")->get_value("InstallDate")->get_data();	
 				$str = $date." - ";

@@ -53,7 +53,7 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg("shelloverlay");
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite time: ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 		
 		my @subkeys = $key->get_list_of_subkeys();
@@ -69,7 +69,7 @@ sub pluginmain {
 			}
 			
 			foreach my $t (reverse sort {$a <=> $b} keys %id) {
-				::rptMsg(gmtime($t)." Z");
+				::rptMsg(::getDateFromEpoch($t)."Z");
 				foreach my $item (@{$id{$t}}) {
 					::rptMsg("  ".$item);
 				}

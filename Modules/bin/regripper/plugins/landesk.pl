@@ -6,6 +6,7 @@
 #  https://community.landesk.com/docs/DOC-3249
 #
 # Change history
+#   20200517 - updated date output format
 #   20160823 - added "Current Duration" parsing
 #   20160822 - updated based on client engagement
 #   20130326 - added Wow6432Node path
@@ -14,6 +15,7 @@
 #
 # Orignal copyright 2009 Don C. Weber
 # Updated copyright 2013 QAR, LLC
+# Updated copyright 2020 QAR, LLC
 #-----------------------------------------------------------
 package landesk;
 use strict;
@@ -23,7 +25,7 @@ my %config = (hive          => "Software",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20160823);
+              version       => 20200517);
 
 sub getConfig{return %config}
 
@@ -58,11 +60,11 @@ sub pluginmain {
 			if (scalar(@subkeys) > 0) {
 				foreach my $s (@subkeys) {
 				  ::rptMsg($s->get_name());
-					::rptMsg("  LastWrite: ".gmtime($s->get_timestamp())." Z");
+					::rptMsg("  LastWrite: ".::getDateFromEpoch($s->get_timestamp())."Z");
 					
 					eval {
 						@ts = unpack("VV",$s->get_value("Last Started")->get_data());
-						::rptMsg("  Last Started: ".gmtime(::getTime($ts[0],$ts[1]))." Z");
+						::rptMsg("  Last Started: ".::getDateFromEpoch(::getTime($ts[0],$ts[1]))."Z");
 					};
 					
 					eval {
@@ -88,7 +90,7 @@ sub pluginmain {
 					
 					eval {
 						@ts = unpack("VV",$s->get_value("First Started")->get_data());
-						::rptMsg("  First Started: ".gmtime(::getTime($ts[0],$ts[1]))." Z");
+						::rptMsg("  First Started: ".::getDateFromEpoch(::getTime($ts[0],$ts[1]))."Z");
 					};
 					
 					eval {
@@ -121,7 +123,7 @@ sub pluginmain {
 		if ($key = $root_key->get_subkey($key_path)) {
 			::rptMsg("");	
 			::rptMsg($key_path);
-			::rptMsg("LastWrite: ".gmtime($key->get_timestamp()));
+			::rptMsg("LastWrite: ".::getDateFromEpoch($key->get_timestamp())."Z");
 			::rptMsg("");	
 		
 			my @vals = $key->get_list_of_values();
@@ -129,7 +131,7 @@ sub pluginmain {
 				foreach my $v (@vals) {
 					my $name = $v->get_name();
 					my $data = $v->get_data();
-					::rptMsg($data."  Logon: ".gmtime($name));
+					::rptMsg($data."  Logon: ".::getDateFromEpoch($name)."Z");
 				}
 			
 			}

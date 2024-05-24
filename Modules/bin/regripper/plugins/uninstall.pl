@@ -9,6 +9,7 @@
 #    http://msdn.microsoft.com/en-us/library/ms954376.aspx
 #
 # Change History:
+#    20200525 - updated date output format
 #    20140512 - updated to include NTUSER.DAT (recommended by 
 #               Bartosz Inglot, bartosz.inglot@uk.pwc.com)
 #    20120523 - updated to include 64-bit systems
@@ -16,7 +17,7 @@
 #    20090413 - Extract DisplayVersion info
 #    20090128 - Added references
 #
-# copyright 2014 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package uninstall;
@@ -27,12 +28,12 @@ my %config = (hive          => "Software, NTUSER\.DAT",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20140512);
+              version       => 20200525);
 
 sub getConfig{return %config}
 
 sub getShortDescr {
-	return "Gets contents of Uninstall keys from Software, NTUSER.DAT hives";	
+	return "Gets contents of Uninstall keys from Software, NTUSER\.DAT hives";	
 }
 sub getDescr{}
 sub getRefs {}
@@ -82,7 +83,7 @@ sub pluginmain {
 	 				push(@{$uninst{$lastwrite}},$display);
 	 			}
 	 			foreach my $t (reverse sort {$a <=> $b} keys %uninst) {
-					::rptMsg(gmtime($t)." (UTC)");
+					::rptMsg(::getDateFromEpoch($t)."Z");
 					foreach my $item (@{$uninst{$t}}) {
 						::rptMsg("  ".$item);
 					}

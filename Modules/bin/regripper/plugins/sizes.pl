@@ -1,4 +1,4 @@
-#! c:\perl\bin\perl.exe
+
 #-----------------------------------------------------------
 # sizes.pl
 # Plugin for RegRipper; traverses through a Registry hive,
@@ -6,6 +6,7 @@
 # sizes; change $min_size value to suit your needs
 #
 # Change history
+#    20200517 - minor updates
 #    20180817 - updated to include brief output, based on suggestion from J. Wood
 #    20180607 - modified based on Meterpreter input from Mari DeGrazia
 #    20150527 - Created
@@ -24,7 +25,7 @@ my %config = (hive          => "All",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20180817);
+              version       => 20200517);
 
 sub getConfig{return %config}
 sub getShortDescr {

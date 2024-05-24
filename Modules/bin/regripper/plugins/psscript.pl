@@ -1,8 +1,6 @@
 #-----------------------------------------------------------
 # psscript.pl 
 # 
-#
-#
 #  http://www.hexacorn.com/blog/2017/01/07/beyond-good-ol-run-key-part-52/
 #
 # Also, check folders:
@@ -11,19 +9,20 @@
 #
 #
 # Change history
+#   20200525 - updated date output format
 #   20170107 - created
 #
-# Copyright 2017 QAR, LLC
+# Copyright 2020 QAR, LLC
 #-----------------------------------------------------------
 package psscript;
 use strict;
 
-my %config = (hive          => "Software",
+my %config = (hive          => "Software, NTUSER\.DAT",
               osmask        => 22,
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20170107);
+              version       => 20200525);
 
 sub getConfig{return %config}
 
@@ -53,7 +52,7 @@ sub pluginmain {
 		my $key;
 		if ($key = $root_key->get_subkey($key_path)) {
 			::rptMsg($key_path);
-			::rptMsg("LastWrite: ".gmtime($key->get_timestamp()));
+			::rptMsg("LastWrite: ".::getDateFromEpoch($key->get_timestamp())."Z");
 			::rptMsg("");
 			my @vals = $key->get_list_of_values();
 			if (scalar @vals > 0) {
@@ -78,7 +77,7 @@ sub pluginmain {
 		if ($key = $root_key->get_subkey($key_path)) {
 			::rptMsg("");	
 			::rptMsg($key_path);
-			::rptMsg("LastWrite: ".gmtime($key->get_timestamp()));
+			::rptMsg("LastWrite: ".::getDateFromEpoch($key->get_timestamp())."Z");
 			::rptMsg("");	
 		
 			my @vals = $key->get_list_of_values();

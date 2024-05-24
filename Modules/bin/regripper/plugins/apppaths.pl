@@ -8,21 +8,23 @@
 #
 #
 # History:
+#  20200511 - updated date output format
+#  20190812 - added support for NTUSER.DAT hives
 #  20120524 - updated to include 64-bit OSs
 #  20080404 - created
 #
-# copyright 2012 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package apppaths;
 use strict;
 
-my %config = (hive          => "Software",
+my %config = (hive          => "NTUSER\.DAT,Software",
               osmask        => 22,
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 1,
-              version       => 20120524);
+              version       => 20200511);
 
 sub getConfig{return %config}
 
@@ -54,14 +56,16 @@ sub pluginmain {
 # used a list of values to address the need for parsing the App Paths key
 # in the Wow6432Node key, if it exists.
 	my @paths = ("Microsoft\\Windows\\CurrentVersion\\App Paths",
-	             "Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\App Paths");
+	             "Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\App Paths",
+	             "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths",
+	             "Wow6432Node\\Software\\Microsoft\\Windows\\CurrentVersion\\App Paths");
 	
 	foreach my $key_path (@paths) {
 		my $key;
 		if ($key = $root_key->get_subkey($key_path)) {
-			::rptMsg("App Paths");
-			::rptMsg($key_path);
-			::rptMsg("");
+#			::rptMsg("App Paths");
+#			::rptMsg($key_path);
+#			::rptMsg("");
 			my %apps;
 			my @subkeys = $key->get_list_of_subkeys();
 			if (scalar(@subkeys) > 0) {
@@ -77,7 +81,7 @@ sub pluginmain {
 				}
 			
 				foreach my $t (reverse sort {$a <=> $b} keys %apps) {
-					::rptMsg(gmtime($t)." (UTC)");
+					::rptMsg(::getDateFromEpoch($t)."Z");
 					foreach my $item (@{$apps{$t}}) {
 						::rptMsg("  $item");
 					}
@@ -88,7 +92,7 @@ sub pluginmain {
 			}
 		}
 		else {
-			::rptMsg($key_path." not found.");
+#			::rptMsg($key_path." not found.");
 		}
 	}
 }

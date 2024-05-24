@@ -1,15 +1,16 @@
 #-----------------------------------------------------------
 # mpmru.pl
-# Plugin for Registry Ripper, NTUSER.DAT edition - gets the 
 # Media Player RecentFileList values 
 #
 # Change history
-#
+#  20200517 - updated date output format
+#  20080324 - created
 #
 # References
 #
 # 
-# copyright 2008 H. Carvey
+# copyright 2020 Quantum Analytics Research, LLC
+# Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package mpmru;
 use strict;
@@ -19,7 +20,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20080324);
+              version       => 20200517);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -46,7 +47,7 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg("Media Player - RecentFileList");
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		my @vals = $key->get_list_of_values();
 		if (scalar(@vals) > 0) {
 			my %files;
@@ -65,12 +66,10 @@ sub pluginmain {
 		}
 		else {
 			::rptMsg($key_path." has no values.");
-			::logMsg($key_path." has no values.");
 		}
 	}
 	else {
 		::rptMsg($key_path." not found.");
-		::logMsg($key_path." not found.");
 	}
 }
 

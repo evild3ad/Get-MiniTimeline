@@ -2,13 +2,14 @@
 # syscache_csv.pl 
 #   
 # Change history
+#   20200515 - updated date output format
 #   20190425 - csv output added
 #   20181209 - original plugin created
 #
 # References
 #   https://github.com/libyal/winreg-kb/blob/master/documentation/SysCache.asciidoc
 #
-# Copyright (c) 2018 QAR, LLC
+# Copyright 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package syscache_csv;
@@ -20,7 +21,7 @@ my %config = (hive          => "syscache",
               hasRefs       => 0,
               osmask        => 22,
               category      => "program execution",
-              version       => 20190425);
+              version       => 20200515);
 my $VERSION = getVersion();
 
 # Functions #
@@ -62,7 +63,7 @@ sub processKey {
 	my @str = ();
 	my $lw = $key->get_timestamp();
 #	::rptMsg("LastWrite: ".gmtime($lw)." Z");
-	push(@str,gmtime($lw)." UTC");
+	push(@str,::getDateFromEpoch($lw)."Z");
 	
 	eval {
 		my ($f1,$f2,$seq) = unpack("Vvv",$key->get_value("_FileId_")->get_data());

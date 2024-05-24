@@ -1,14 +1,13 @@
 #-----------------------------------------------------------
 # at.pl
-#   
+# Look for Scheduled Tasks created using at.exe, in the Software hive  
 #
 # Change history
+#   20200525 - updated date output format
 #   20140821 - created
 #
 # 
-#   
-#
-# Copyright (c) 2014 QAR,LLC
+# Copyright (c) 2020 Quantum Analystics Research,LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package at;
@@ -20,7 +19,7 @@ my %config = (hive          => "Software",
               hasRefs       => 0,
               osmask        => 22,
               category      => "program execution",
-              version       => 20140821);
+              version       =>  20200525);
 
 my $VERSION = getVersion();
 
@@ -52,7 +51,7 @@ sub pluginmain {
 				my $name = $s->get_name();
 				next unless ($name =~ m/^At/);
 				my $lw = $s->get_timestamp();
-				::rptMsg($name." - LastWrite time: ".gmtime($lw)." UTC");
+				::rptMsg($name." - LastWrite time: ".::getDateFromEpoch($lw)."Z");
 			}
 		}
 	}

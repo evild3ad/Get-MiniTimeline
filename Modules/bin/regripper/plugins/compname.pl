@@ -37,7 +37,7 @@ sub pluginmain {
 	my $hive = shift;
 	::logMsg("Launching compname v.".$VERSION);
 	::rptMsg("compname v.".$VERSION); # banner
-    ::rptMsg("(".$config{hive}.") ".getShortDescr()."\n"); # banner
+  ::rptMsg("(".$config{hive}.") ".getShortDescr()."\n"); # banner
 	my $reg = Parse::Win32Registry->new($hive);
 	my $root_key = $reg->get_root_key;
 # First thing to do is get the ControlSet00x marked current...this is
@@ -57,12 +57,10 @@ sub pluginmain {
 		}
 		else {
 			::rptMsg($cn_path." not found.");
-			::logMsg($cn_path." not found.");
 		}
 	}
 	else {
 		::rptMsg($key_path." not found.");
-		::logMsg($key_path." not found.");
 	}
 	
 	my $hostname;

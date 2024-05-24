@@ -3,6 +3,7 @@
 # Get values from Drivers32 key
 # 
 # History
+#   20200525 - updated date output format
 #   20130408 - created by copying then modifying the soft_run plug-in
 #
 # References
@@ -19,7 +20,7 @@ my %config = (hive          => "Software",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 1,
-              version       => 20130408);
+              version       => 20200525);
 
 sub getConfig{return %config}
 
@@ -55,7 +56,7 @@ sub pluginmain {
 		my $key;
 		if ($key = $root_key->get_subkey($key_path)) {
 			::rptMsg($key_path);
-			::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+			::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		
 			my %vals = getKeyValues($key);
 			if (scalar(keys %vals) > 0) {

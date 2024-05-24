@@ -2,6 +2,7 @@
 # disablelastaccess.pl
 #
 # History:
+#  20200517 - updated date output format
 #  20181207 - updated for Win10 v.1803 (Maxim, David Cohen)
 #  20090118 - 
 # 
@@ -12,7 +13,7 @@
 #		 http://support.microsoft.com/kb/555041
 #    http://support.microsoft.com/kb/894372
 #
-# copyright 2008 H. Carvey, keydet89@yahoo.com
+# copyright 2020 H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package disablelastaccess;
 use strict;
@@ -22,7 +23,7 @@ my %config = (hive          => "System",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20181207);
+              version       => 20200517);
 
 sub getConfig{return %config}
 
@@ -68,6 +69,7 @@ sub pluginmain {
 		my @vals = $key->get_list_of_values();
 		my $found = 0;
 		if (scalar(@vals) > 0) {
+			::rptMsg("Key LastWrite time: ".::getDateFromEpoch($key->get_timestamp())."Z");
 			foreach my $v (@vals) {
 				if ($v->get_name() eq "NtfsDisableLastAccessUpdate") {
 					my $dat = $v->get_data();

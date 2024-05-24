@@ -3,12 +3,13 @@
 #  
 #
 # Change history
+#   20200517 - updated date output format
 #   20180611 - created (per request submitted by John McCash)
 #
 # References
 #  https://twitter.com/sv2hui/status/1005763370186891269
 # 
-# copyright 2018 QAR, LLC
+# copyright 2020 QAR, LLC
 # author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package jumplistdata;
@@ -19,7 +20,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20180611);
+              version       => 20200517);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -37,7 +38,7 @@ sub pluginmain {
 	my $ntuser = shift;
 	::logMsg("Launching jumplistdata v.".$VERSION);
 	::rptMsg("jumplistdata v.".$VERSION); 
-  ::rptMsg("- ".getShortDescr()."\n"); 
+  ::rptMsg(getShortDescr()."\n"); 
 	my $reg = Parse::Win32Registry->new($ntuser);
 	my $root_key = $reg->get_root_key;
 
@@ -52,7 +53,7 @@ sub pluginmain {
 				my $name = $v->get_name();
 				my @t = unpack("VV",$v->get_data());
 				my $w = ::getTime($t[0],$t[1]);
-				::rptMsg(gmtime($w)." UTC  $name");
+				::rptMsg(::getDateFromEpoch($w)."Z  $name");
 				
 			}
 		}

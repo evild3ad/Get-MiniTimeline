@@ -3,12 +3,14 @@
 # 	Gets the value that turns System Restore either on or off
 #
 # Change History
-#   20120914 
+#   20200515 - updated date output format
+#   20120914 - created
 #
 # References
 # 	Registry Keys and Values for the System Restore Utility http://support.microsoft.com/kb/295659
 #
-# copyright 2012 Corey Harrell (Journey Into Incident Response)
+# copyright 2020 Quantum Analytics Research, LLC
+# author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package disablesr;
 use strict;
@@ -18,7 +20,7 @@ my %config = (hive          => "Software",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20120914);
+              version       => 20200515);
 
 sub getConfig{return %config}
 
@@ -36,8 +38,8 @@ sub pluginmain {
 	my $class = shift;
 	my $hive = shift;
 	::logMsg("Launching disablesr v.".$VERSION);
-    ::rptMsg("disablesr v.".$VERSION); 
-    ::rptMsg("(".getHive().") ".getShortDescr()."\n"); 
+  ::rptMsg("disablesr v.".$VERSION); 
+  ::rptMsg("(".getHive().") ".getShortDescr()."\n"); 
 
 	my $reg = Parse::Win32Registry->new($hive);
 	my $root_key = $reg->get_root_key;
@@ -45,7 +47,7 @@ sub pluginmain {
 	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 		
 		my $disable;
@@ -64,8 +66,6 @@ sub pluginmain {
 	}
 	else {
 		::rptMsg($key_path." not found.");
-		::logMsg($key_path." not found.");
 	}
-	
 }
 1;

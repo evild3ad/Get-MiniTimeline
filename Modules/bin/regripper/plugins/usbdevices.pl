@@ -3,11 +3,13 @@
 # Parses contents of Enum\USB key for USB devices (not only USB storage devices)
 # 
 # History
+#   20200525 - updated date output format
 # 	20140416 - updated to include WPD devices (Jasmine Chau)
 #   20120522 - updated to report only USBStor devices
 #   20100219 - created
 #
-# copyright 2014 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
+# author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package usbdevices;
 use strict;
@@ -17,7 +19,7 @@ my %config = (hive          => "System",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20140416);
+              version       => 20200525);
 
 sub getConfig{return %config}
 
@@ -54,7 +56,8 @@ sub pluginmain {
 		return;
 	}
 	
-	$key_path = $ccs."\\Enum\\USB";
+	my $key_path = $ccs."\\Enum\\USB";
+	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		
 		my @subkeys = $key->get_list_of_subkeys();
@@ -93,9 +96,9 @@ sub pluginmain {
 						
 						if ($serv eq "USBSTOR") {
 							::rptMsg($s->get_name());
-							::rptMsg("LastWrite: ".gmtime($s->get_timestamp()));
+							::rptMsg("LastWrite: ".::getDateFromEpoch($s->get_timestamp())."Z");
 							::rptMsg("  SN       : ".$s2->get_name());
-							::rptMsg("  LastWrite: ".gmtime($s2->get_timestamp()));
+							::rptMsg("  LastWrite: ".::getDateFromEpoch($s2->get_timestamp())."Z");
 #							::rptMsg("DeviceDesc: ".$desc);
 #							::rptMsg("Class     : ".$class);
 #							::rptMsg("Location  : ".$loc);
@@ -104,9 +107,9 @@ sub pluginmain {
 						}
 						elsif (($class eq "WPD") && ($serv eq "WUDFRd")) {
 							::rptMsg($s->get_name());
-							::rptMsg("LastWrite: ".gmtime($s->get_timestamp()));
+							::rptMsg("LastWrite: ".::getDateFromEpoch($s->get_timestamp())."Z");
 							::rptMsg("  SN       : ".$s2->get_name());
-							::rptMsg("  LastWrite: ".gmtime($s2->get_timestamp()));
+							::rptMsg("  LastWrite: ".::getDateFromEpoch($s2->get_timestamp())."Z");
 							::rptMsg("MFG       : ".$mfg);
 							::rptMsg("FriendlyName: ".$fname);
 							::rptMsg("");

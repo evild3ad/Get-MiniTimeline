@@ -3,6 +3,7 @@
 #   
 #
 # Change history
+#   20200517 - updated date output format
 #   20180920 - created
 #
 # References
@@ -10,7 +11,7 @@
 #   http://blog.airbuscybersecurity.com/post/2015/06/Latest-improvements-in-PlugX
 #   https://docs.microsoft.com/en-us/windows/desktop/inputdev/wm-appcommand
 #
-# Copyright (c) 2018 QAR, LLC
+# Copyright 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package appkeys;
@@ -22,7 +23,7 @@ my %config = (hive          => "NTUSER\.DAT, Software",
               hasRefs       => 0,
               osmask        => 22,
               category      => "persistence",
-              version       => 20180920);
+              version       => 20200517);
 my $VERSION = getVersion();
 
 sub getConfig {return %config}
@@ -56,7 +57,7 @@ sub pluginmain {
 			my @sk = $key->get_list_of_subkeys();
 			if (scalar @sk > 0) {
 				foreach my $s (@sk) {	
-					::rptMsg("Subkey Name: ".$s->get_name()."  LastWrite: ".gmtime($s->get_timestamp()));
+					::rptMsg("Subkey Name: ".$s->get_name()."  LastWrite: ".::getDateFromEpoch($s->get_timestamp())."Z");
 					
 					eval {
 						my $shell = $s->get_value("ShellExecute")->get_data();

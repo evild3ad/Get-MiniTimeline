@@ -1,16 +1,15 @@
 #-----------------------------------------------------------
 # profilelist.pl
-# Gets ProfileList subkeys and ProfileImagePath value; also
-# gets the ProfileLoadTimeHigh and Low values, and translates them
-# into a readable time
+# Gets ProfileList subkeys and ProfileImagePath value
 #
 # History:
+#   20200518 - updated date output format
 #   20100219 - updated to gather SpecialAccounts and domain
 #              user info
 #   20080415 - created
 #
 #
-# copyright 2010 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 #-----------------------------------------------------------
 package profilelist;
 use strict;
@@ -20,7 +19,7 @@ my %config = (hive          => "Software",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 0,
-              version       => 20100219);
+              version       => 20200518);
 
 sub getConfig{return %config}
 
@@ -49,7 +48,7 @@ sub pluginmain {
 	my $key;
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+#		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 		
 		my @subkeys = $key->get_list_of_subkeys();
@@ -62,7 +61,7 @@ sub pluginmain {
 				
 				::rptMsg("Path      : ".$path);
 				::rptMsg("SID       : ".$s->get_name());
-				::rptMsg("LastWrite : ".gmtime($s->get_timestamp())." (UTC)");
+				::rptMsg("LastWrite : ".::getDateFromEpoch($s->get_timestamp())."Z");
 				
 				my $user;
 				if ($path) {
@@ -71,31 +70,20 @@ sub pluginmain {
 					$user = $a[$end];
 					$profiles{$s->get_name()} = $user;
 				}
-				
-				my @load;
-				eval {
-					$load[0] = $s->get_value("ProfileLoadTimeLow")->get_data();
-					$load[1] = $s->get_value("ProfileLoadTimeHigh")->get_data();
-				};
-				if (@load) {
-					my $loadtime = ::getTime($load[0],$load[1]);
-					::rptMsg("LoadTime  : ".gmtime($loadtime)." (UTC)");
-				}
+
 				::rptMsg("");
 			}
 		}
 		else {
 			::rptMsg($key_path." has no subkeys.");
-			::logMsg($key_path." has no subkeys.");
 		}
 	}
 	else {
 		::rptMsg($key_path." not found.");
-		::logMsg($key_path." not found.");
 	}
 	
 # The following was added 20100219
-	$key_path = "Microsoft\\Windows NT\\CurrentVersion\\Winlogon";
+	my $key_path = "Microsoft\\Windows NT\\CurrentVersion\\Winlogon";
 	if ($key = $root_key->get_subkey($key_path)) {
 		my @subkeys = $key->get_list_of_subkeys();
 		if (scalar @subkeys > 0) {

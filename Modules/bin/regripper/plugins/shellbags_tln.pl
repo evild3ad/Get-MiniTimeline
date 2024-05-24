@@ -167,7 +167,7 @@ my %folder_types = ("{724ef170-a42d-4fef-9f26-b60e846fba4f}" => "Administrative 
 sub pluginmain {
 	my $class = shift;
 	my $hive = shift;
-	::logMsg("Launching shellbag2 v.".$VERSION);
+#	::logMsg("Launching shellbags_tln v.".$VERSION);
 	my %item = ();
 
 	my $reg = Parse::Win32Registry->new($hive);

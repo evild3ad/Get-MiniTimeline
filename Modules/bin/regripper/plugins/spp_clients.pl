@@ -43,14 +43,13 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg("SPP_Clients");
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
-		
+		::rptMsg("Monitored volumes: ");
 		my $mon;
 		eval {
 			$mon = $key->get_value("{09F7EDC5-294E-4180-AF6A-FB0E6A0E9513}")->get_data();
-			::rptMsg("Monitored volumes: ".$mon);
-			::alertMsg("ALERT: No volumes monitored by VSS\.") if ($mon eq "");
+			::rptMsg($mon);
 		};
 		
 	}

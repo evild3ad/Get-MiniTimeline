@@ -5,13 +5,14 @@
 # by malware.
 #
 # Change history
+#   20200517 - updated date output format
 #   20100811 - created
 #
 # References
 #   http://support.microsoft.com/kb/103865
 #   http://security.fnal.gov/cookbook/WinStartup.html
 # 
-# copyright 2010 Quantum Analytics Research, LLC
+# copyright 2020 Quantum Analytics Research, LLC
 #-----------------------------------------------------------
 package load;
 use strict;
@@ -21,7 +22,7 @@ my %config = (hive          => "NTUSER\.DAT",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              version       => 20100811);
+              version       => 20200517);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -48,7 +49,7 @@ sub pluginmain {
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg("load");
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		my @vals = $key->get_list_of_values();
 		if (scalar(@vals) > 0) {
 			::rptMsg("");

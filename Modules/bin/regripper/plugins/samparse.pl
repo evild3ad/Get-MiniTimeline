@@ -3,6 +3,7 @@
 # Parse the SAM hive file for user/group membership info
 #
 # Change history:
+#    20220921 - updated w/ security question parsing (contribution by Mark McKinnon)
 #    20160203 - updated to include add'l values (randomaccess/Phill Moore contribution)
 #    20120722 - updated %config hash
 #    20110303 - Fixed parsing of SID, added check for account type
@@ -18,11 +19,13 @@
 #    Source available here: http://pogostick.net/~pnh/ntpasswd/
 #    http://accessdata.com/downloads/media/Forensic_Determination_Users_Logon_Status.pdf
 #
-# copyright 2016 Quantum Analytics Research, LLC
+# copyright 2022 Quantum Analytics Research, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package samparse;
 use strict;
+use JSON::PP;
+use Encode::Unicode;
 
 my %config = (hive          => "SAM",
               hivemask      => 2,
@@ -32,7 +35,7 @@ my %config = (hive          => "SAM",
               hasShortDescr => 1,
               hasDescr      => 0,
               hasRefs       => 1,
-              version       => 20160203);
+              version       => 20220921);
 
 sub getConfig{return %config}
 
@@ -130,6 +133,23 @@ sub pluginmain {
 					my $f = $f_value->get_data();
 					my %f_val = parseF($f);
 					
+					eval {
+					  my $reset_data_value = $u->get_value("ResetData");
+						my $reset_data = $reset_data_value->get_data();
+    				my $reset_data_hash = decode_json($reset_data);
+						my $reset_data_question_1 = $reset_data_hash->{'questions'}[0];
+						my $reset_data_question_2 = $reset_data_hash->{'questions'}[1];
+						my $reset_data_question_3 = $reset_data_hash->{'questions'}[2];
+						my $question_1 = $reset_data_question_1->{'question'};
+            ::rptMsg("Security Questions:");
+						::rptMsg("    Question 1  : ".$question_1);
+						::rptMsg("    Answer 1    : ".$reset_data_question_1->{'answer'});
+						::rptMsg("    Question 2  : ".$reset_data_question_2->{'question'});
+						::rptMsg("    Answer 2    : ".$reset_data_question_2->{'answer'});
+						::rptMsg("    Question 3  : ".$reset_data_question_3->{'question'});
+						::rptMsg("    Answer 3    : ".$reset_data_question_3->{'answer'});
+					};
+								
 					my $lastlogin;
 					my $pwdreset;
 					my $pwdfail;
@@ -158,8 +178,7 @@ sub pluginmain {
 						::rptMsg("InternetName    : ".$internet);
 					};
 					
-					
-					
+
 					my $pw_hint;
 					eval {
 						$pw_hint = $u->get_value("UserPasswordHint")->get_data();
@@ -174,6 +193,7 @@ sub pluginmain {
 						::rptMsg("  --> ".$acb_flags{$flag}) if ($f_val{acb_flags} & $flag);
 					}
 					::rptMsg("");
+					
 				}
 			}
 		}
@@ -364,7 +384,8 @@ sub _translateSID {
 #---------------------------------------------------------------------
 sub _uniToAscii {
   my $str = $_[0];
-  $str =~ s/\x00//g;
+  Encode::from_to($str,'UTF-16LE','utf8');
+  $str = Encode::decode_utf8($str);
   return $str;
 }
 

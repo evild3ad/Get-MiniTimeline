@@ -3,13 +3,14 @@
 #   Values within this key appear to include the hard drive serial number
 #
 # Change history
+#   20200518 - updated date output format
 #   20140326 - created
 #
 # References
 #   Issues with WMI: http://www.techques.com/question/1-10989338/WMI-HDD-Serial-Number-Transposed
 #   *command "wmic diskdrive get serialnumber" will return transposed info
 #
-# Copyright 2014 QAR, LLC
+# Copyright 2020 QAR, LLC
 # Author: H. Carvey, keydet89@yahoo.com
 #-----------------------------------------------------------
 package susclient;
@@ -20,8 +21,8 @@ my %config = (hive          => "Software",
               hasDescr      => 0,
               hasRefs       => 0,
               osmask        => 22,
-              category      => "System Config",
-              version       => 20140326);
+              category      => "config",
+              version       => 20200518);
 my $VERSION = getVersion();
 
 # Functions #
@@ -49,7 +50,7 @@ sub pluginmain {
 	
 	if ($key = $root_key->get_subkey($key_path)) {
 		::rptMsg($key_path);
-		::rptMsg("LastWrite Time ".gmtime($key->get_timestamp())." (UTC)");
+		::rptMsg("LastWrite Time ".::getDateFromEpoch($key->get_timestamp())."Z");
 		::rptMsg("");
 		my @vals = $key->get_list_of_values();
 		if (scalar(@vals) > 0) {
@@ -61,11 +62,8 @@ sub pluginmain {
 					::rptMsg(sprintf "%-25s  %-30s",$v->get_name(),$v->get_data());
 				}
 				elsif ($v->get_name() eq "SusClientIdValidation") {
-					::rptMsg("SusClientIdValidation");
-#					probe($v->get_data());
-#					::rptMsg("");
 					my $sn = parseSN($v->get_data());
-					::rptMsg("  Serial Number: ".$sn);
+					::rptMsg("SusClientIdValidation - Serial Number: ".$sn);
 					
 				}
 				else {}
@@ -90,8 +88,8 @@ sub parseSN {
 	my $sz     = unpack("C",substr($data,2,1));
 	
 	$sn = substr($data,$offset,$sz);
-	$sn =~ s/\x00//g;
-	$sn =~ s/\x20//g;
+	$sn =~ s/\00//g;
+	$sn =~ s/\20//g;
 	return $sn;
 }
 

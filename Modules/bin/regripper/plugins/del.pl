@@ -1,9 +1,10 @@
-#! c:\perl\bin\perl.exe
+
 #-----------------------------------------------------------
 # del.pl
 # 
 #
 # Change history
+#   20200515 - updated date output format
 #   20190506 - updated
 #   20140807 - created
 #
@@ -12,7 +13,7 @@
 #   https://github.com/msuhanov/regf/blob/master/Windows%20registry%20file%20format%20specification.md
 #
 # 
-# copyright 2019 QAR, LLC
+# copyright 2020 QAR, LLC
 # Author: H. Carvey
 #-----------------------------------------------------------
 package del;
@@ -24,7 +25,7 @@ my %config = (hive          => "All",
               hasRefs       => 0,
               osmask        => 22,
               category      => "deleted",
-              version       => 20190506);
+              version       => 20200515);
 
 sub getConfig{return %config}
 sub getShortDescr {
@@ -146,7 +147,7 @@ sub parseKeyNode {
 			$name = substr($data,$ofs + 0x4c,$len_name);
 			::rptMsg("Key name: ".$name);
 		}
-		::rptMsg("Key LastWrite time = ".gmtime($lw)." UTC");
+		::rptMsg("Key LastWrite time = ".::getDateFromEpoch($lw)."Z");
 		::rptMsg(sprintf "Offset to parent: 0x%x",$parent_ofs);
 	}
 }
