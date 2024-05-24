@@ -1,3 +1,5 @@
+<img src="https://img.shields.io/badge/Language-Powershell-blue"> <img src="https://img.shields.io/badge/Maintenance%20Level-Actively%20Developed-brightgreen"> <a href="https://twitter.com/Evild3ad79"><img src="https://img.shields.io/twitter/follow/Evild3ad79?style=social"></a>
+
 # Get-MiniTimeline
 Get-MiniTimeline.ps1 is a PowerShell script utilized to collect several forensic artifacts from a mounted forensic image and auto-generate a beautified MiniTimeline from the data collected.
 
@@ -38,32 +40,31 @@ PS > .\Get-MiniTimeline.ps1 dateRange:MM/DD/YYYY-MM/DD/YYYY
 **Fig 4:** Timeline.csv - Full Timeline Analysis w/ Timeline Explorer (TLE)
 
 ## Dependencies
-KAPE v0.8.8.0 (2019-10-23)  
+KAPE v1.3.0.2 (2023-01-03)  
 https://ericzimmerman.github.io/  
 https://binaryforay.blogspot.com/search?q=KAPE  
 https://ericzimmerman.github.io/KapeDocs/  
+https://www.kroll.com/kape  
 
-EvtxECmd v0.5.2.0 (2019-08-26)  
+EvtxECmd v1.5.0.0 (.NET 6)  
 https://ericzimmerman.github.io/  
 
-MFTECmd v0.4.4.6 (2019-08-30)   
+MFTECmd v1.2.2.0 (.NET 6)  
 https://ericzimmerman.github.io/    
 
-RegRipper v2.8 (2019-08-14)   
-https://github.com/keydet89/RegRipper2.8  
+RegRipper v3.0 (2020-05-28)     
+https://github.com/keydet89/RegRipper3.0  
 
 TLN Tools   
 https://github.com/mdegrazia/KAPE_Tools   
 https://github.com/keydet89/Tools/tree/master/exe   
 
-ImportExcel 6.5.2   
+ImportExcel v7.8.9 (2024-05-18)     
 https://github.com/dfinke/ImportExcel  
-https://www.evild3ad.com/3910/quick-post-installing-importexcel-powershell-module/
-
-ImportRegistryHive.psm1 by Chris Redit   
-https://blog.redit.name/posts/2015/powershell-loading-registry-hive-from-file.html  
-https://www.evild3ad.com/3940/installing-importregistryhive-powershell-module/  
+  
 
 ## Links
 [SANS Webcast: Triage Collection and Timeline Generation with KAPE](https://www.youtube.com/watch?v=iYyWZSNBNcw)  
 [SANS DFIR Blog: Triage Collection and Timeline Generation with KAPE](https://digital-forensics.sans.org/blog/2019/08/22/triage-collection-and-timeline-generation-with-kape)  
+[Kroll - Express Artifact Analysis and Timeline Development with KAPE (YouTube)](https://www.youtube.com/watch?v=O5VW0Yr7guQ)  
+[Kroll - Express Artifact Analysis and Timeline Development with KAPE (Slides)](https://www.kroll.com/-/media/kroll/pdfs/webinars/artifact-analysis-timelining-with-kape.pdf)
