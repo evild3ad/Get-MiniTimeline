@@ -194,7 +194,7 @@ Function Import-RegistryHive
 
     # Check whether the drive name is available
     $TestDrive = Get-PSDrive -Name $Name -EA SilentlyContinue
-    if ($TestDrive -ne $null)
+    if ($null -ne $TestDrive)
     {
         $ErrorRecord = New-Object Management.Automation.ErrorRecord(
             (New-Object Management.Automation.SessionStateException("A drive with the name '$Name' already exists.")),
@@ -256,7 +256,7 @@ Function Remove-RegistryHive
     $Drive = Get-PSDrive -Name $Name -ErrorAction SilentlyContinue
 
     # If $Drive is $null the drive name was incorrect
-    if ($Drive -eq $null)
+    if ($null -eq $Drive)
     {
         $ErrorRecord = New-Object Management.Automation.ErrorRecord(
             (New-Object Management.Automation.DriveNotFoundException("The drive '$Name' does not exist.")),
