@@ -9,7 +9,7 @@ Forensic Artifacts:
 * Windows Registry  
 
 ## Download
-Download the latest version of **Get-MiniTimeline** from the [releases](https://github.com/evild3ad/Get-MiniTimeline/releases) section.
+Download the latest version of **Get-MiniTimeline** from the [Releases](https://github.com/evild3ad/Get-MiniTimeline/releases) section.
 
 ## Usage
 1. Mount your forensic image with e.g. drive letter `G:`  
