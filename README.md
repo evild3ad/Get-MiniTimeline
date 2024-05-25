@@ -21,6 +21,7 @@ Note: When your forensic disk image has multiple partitions you may have to chan
 2. Enter your drive letter in `Get-MiniTimeline.ps1`  
 `Input (Source)`  
 `$ROOT = "G:"`   
+
 Optional: You can also change the outpath path.  
 `$OUTPUT_FOLDER = "$env:USERPROFILE\Desktop\MiniTimeline\$ComputerName"`
 
