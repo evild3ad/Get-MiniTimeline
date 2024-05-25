@@ -31,16 +31,16 @@ PS > .\Get-MiniTimeline.ps1 dateRange:MM/DD/YYYY-MM/DD/YYYY
 ```
 
 ![PowerShell](https://github.com/evild3ad/Get-MiniTimeline/blob/9ea8d83e20d685dd14ebe3b6f646f0980579c223/Screenshots/02.png)
-**Fig 2:** Running Get-MiniTimeline.ps1 (Example)
+**Fig 2:** Running Get-MiniTimeline.ps1 (Example)  
 
 ![MessageBox](https://github.com/evild3ad/Get-MiniTimeline/blob/9ea8d83e20d685dd14ebe3b6f646f0980579c223/Screenshots/03.png)
-**Fig 3:** Message Box
+**Fig 3:** Message Box  
 
 ![Colorized Excel](https://github.com/evild3ad/Get-MiniTimeline/blob/9ea8d83e20d685dd14ebe3b6f646f0980579c223/Screenshots/04.png)
-**Fig 4:** Timeline_Slice.xlsx - The dateRange will be auto-beautified as colorized Excel sheet
+**Fig 4:** Timeline_Slice.xlsx - The dateRange will be auto-beautified as colorized Excel sheet  
 
 ![Timeline Explorer](https://github.com/evild3ad/Get-MiniTimeline/blob/9ea8d83e20d685dd14ebe3b6f646f0980579c223/Screenshots/05.png)
-**Fig 5:** Timeline.csv - Full Timeline Analysis w/ Timeline Explorer (TLE)
+**Fig 5:** Timeline.csv - Full Timeline Analysis w/ Timeline Explorer (TLE)  
 
 ## Dependencies
 KAPE v1.3.0.2 (2023-01-03)  
