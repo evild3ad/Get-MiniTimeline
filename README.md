@@ -13,7 +13,7 @@ Download the latest version of **Get-MiniTimeline** from the [Releases](https://
 
 ## Usage
 1. Mount your forensic disk image with e.g. drive letter `G:`  
-Note: When your forensic disk image has multiple partitions you may have to change the path to the Windows partition.   
+Note: When your forensic image has multiple partitions you may have to change the path to the Windows partition.   
 
 ![Arsenal Image Mounter](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/AIM.png)
 **Fig 1:** Arsenal Image Mounter (AIM) 

@@ -118,9 +118,6 @@ else
     $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Definition
 }
 
-# Output Directory
-$OUTPUT_FOLDER = "$env:USERPROFILE\Desktop\MiniTimeline\$ComputerName"
-
 # Tools
 
 # EvtxECmd
@@ -337,30 +334,24 @@ if (!(Get-Module -ListAvailable -Name ImportExcel))
     Exit
 }
 
-# Check if PowerShell module 'ImportRegistryHive' exists
-if (Get-Module -ListAvailable -Name ImportRegistryHive) 
-{
-    # Create Output Directory
-    Import-RegistryHive -File "$ROOT\Windows\System32\config\SYSTEM" -Key "HKLM\TEMP_SYSTEM" -Name SystemHive
-    $CurrentControlSet = Get-ItemPropertyValue "SystemHive:\Select" -Name Current
-    $ComputerName = Get-ItemPropertyValue "SystemHive:\ControlSet00$CurrentControlSet\Control\ComputerName\ComputerName" -Name ComputerName
-    Remove-RegistryHive -Name SystemHive
+# ComputerName
+Import-RegistryHive -File "$ROOT\Windows\System32\config\SYSTEM" -Key "HKLM\TEMP_SYSTEM" -Name SystemHive
+$CurrentControlSet = Get-ItemPropertyValue "SystemHive:\Select" -Name Current
+$ComputerName = Get-ItemPropertyValue "SystemHive:\ControlSet00$CurrentControlSet\Control\ComputerName\ComputerName" -Name ComputerName
+Remove-RegistryHive -Name SystemHive
 
-    if (Test-Path $OUTPUT_FOLDER)
-    {
-        Get-ChildItem -Path "$OUTPUT_FOLDER" -Force -Recurse -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse
-        New-Item "$OUTPUT_FOLDER" -ItemType Directory -Force | Out-Null
-    }
-    else
-    {
-        New-Item "$OUTPUT_FOLDER" -ItemType Directory -Force | Out-Null
-    }
+# Output Directory
+$OUTPUT_FOLDER = "$env:USERPROFILE\Desktop\MiniTimeline\$ComputerName"
+
+# Flush Output Directory
+if (Test-Path $OUTPUT_FOLDER)
+{
+    Get-ChildItem -Path "$OUTPUT_FOLDER" -Force -Recurse -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse
+    New-Item "$OUTPUT_FOLDER" -ItemType Directory -Force | Out-Null
 }
 else
 {
-    Write-Host "[Error] PowerShell module 'ImportRegistryHive' NOT found." -ForegroundColor Red
-    $Host.UI.RawUI.WindowTitle = "$DefaultWindowsTitle"
-    Exit
+    New-Item "$OUTPUT_FOLDER" -ItemType Directory -Force | Out-Null
 }
 
 # Create a record of your Windows PowerShell session to a text file
