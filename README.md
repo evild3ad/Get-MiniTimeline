@@ -1,7 +1,7 @@
-<img src="https://img.shields.io/badge/Language-Powershell-blue"> <img src="https://img.shields.io/badge/Maintenance%20Level-Actively%20Developed-brightgreen"> <a href="https://twitter.com/Evild3ad79"><img src="https://img.shields.io/twitter/follow/Evild3ad79?style=social"></a>
+<img src="https://img.shields.io/badge/Language-Powershell-blue"> <img src="https://img.shields.io/badge/Maintenance%20Level-Actively%20Developed-brightgreen"> [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/evild3ad/Get-MiniTimeline?include_prereleases&style=flat&label=Release)](https://github.com/evild3ad/Get-MiniTimeline/releases) [![GitHub](https://img.shields.io/github/license/evild3ad/Get-MiniTimeline?style=flat&label=License)](LICENSE) <a href="https://www.linkedin.com/in/martin-willing-86343565/"><img src="https://img.shields.io/badge/LinkedIn-evild3ad-0077B5.svg?logo=LinkedIn"></a> <a href="https://twitter.com/Evild3ad79"><img src="https://img.shields.io/twitter/follow/Evild3ad79?style=social"></a>
 
 # Get-MiniTimeline
-Get-MiniTimeline.ps1 is a PowerShell script utilized to collect several forensic artifacts from a mounted forensic image and auto-generate a beautified MiniTimeline from the data collected.
+Get-MiniTimeline.ps1 is a PowerShell script utilized to collect several forensic artifacts from a mounted forensic disk image and auto-generate a beautified MiniTimeline from the data collected.
 
 Forensic Artifacts:  
 * Master File Table ($MFT)  
@@ -12,8 +12,8 @@ Forensic Artifacts:
 Download the latest version of **Get-MiniTimeline** from the [Releases](https://github.com/evild3ad/Get-MiniTimeline/releases) section.
 
 ## Usage
-1. Mount your forensic image with e.g. drive letter `G:`  
-Note: When your forensic image has multiple partitions you may have to change the path to the Windows partition.   
+1. Mount your forensic disk image with e.g. drive letter `G:`  
+Note: When your forensic disk image has multiple partitions you may have to change the path to the Windows partition.   
 
 ![Arsenal Image Mounter](https://github.com/evild3ad/Get-MiniTimeline/blob/master/Screenshots/AIM.png)
 **Fig 1:** Arsenal Image Mounter (AIM) 
@@ -22,7 +22,7 @@ Note: When your forensic image has multiple partitions you may have to change th
 `Input (Source)`  
 `$ROOT = "G:"`   
 Optional: You can also change the outpath path.  
-`$OUTPUT = "$env:USERPROFILE\Desktop\MiniTimeline\$ComputerName"`
+`$OUTPUT_FOLDER = "$env:USERPROFILE\Desktop\MiniTimeline\$ComputerName"`
 
 3. Run Windows PowerShell console as Administrator.  
 
